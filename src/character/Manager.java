@@ -1,0 +1,447 @@
+package character;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+
+public class Manager extends Account {
+
+	public Manager(String account, String password, String name, char character) {
+		super(account, password, name, character);
+	}
+
+	@Override
+	public boolean changePassword(String oldPassword, String newPassword) throws IOException {
+		boolean correctPw = false;// 輸入的舊密碼是否正確，是否為本人
+		FileReader fr = null;
+		fr = new FileReader("data/管理員帳戶資料.txt");
+		BufferedReader br = new BufferedReader(fr);
+		String writeText = "";
+		while (br.ready())
+			try {
+				{
+					String temp = br.readLine();
+					String[] info = temp.split(" ");
+					if (info[0].equals(account) && info[1].equals(oldPassword)) {
+						correctPw = true;
+						temp = "";
+						info[1] = newPassword;
+						for (int i = 0; i < info.length - 1; i++)
+							temp += info[i] + " ";
+						temp += info[info.length - 1];
+					}
+					writeText += temp + "\n";
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		br.close();
+		FileOutputStream writerStream = new FileOutputStream("data/管理員帳戶資料.txt");
+		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(writerStream, "UTF-8"));
+		writer.write(writeText);
+		writer.close();
+		return correctPw;
+	}
+
+	// 新增帳戶
+	public void addNewAccount(String selectedCharacter, String writeText) throws IOException {
+		String file = "";
+		switch (selectedCharacter) {
+		case "學生":
+			file = "data/學生帳戶資料.txt";
+			break;
+		case "教授":
+			file = "data/教授帳戶資料.txt";
+			break;
+		case "管理員":
+			file = "data/管理員帳戶資料.txt";
+			break;
+		}
+		String updateString = addAccountToAccountList(selectedCharacter, writeText, file);
+		FileWriter writer = new FileWriter(file);
+		writer.write(updateString);
+		writer.close();
+	}
+
+	private String addAccountToAccountList(String selectedCharacter, String writeText, String file) throws IOException {
+		FileReader fr = null;
+		fr = new FileReader(file);
+		BufferedReader br = new BufferedReader(fr);
+		StringBuilder storeBefore = new StringBuilder();
+		StringBuilder storeAfter = new StringBuilder();
+		while (br.ready()) {
+			String str = br.readLine();
+			if (writeText.compareTo(str) > 0)
+				storeBefore.append(str + '\n');
+			else if (writeText.compareTo(str) < 0)
+				storeAfter.append(str + '\n');
+		}
+		br.close();
+		return storeBefore.toString() + writeText + storeAfter.toString();
+	}
+
+	// 刪除帳戶
+
+	public void deleteAccount(JTable table, String selectedCharacter) throws IOException {
+		String file = "data/" + selectedCharacter + "帳戶資料.txt";
+		StringBuilder writeText = new StringBuilder();
+		ArrayList<Integer> removeRow = new ArrayList<Integer>();
+		for (int i = 0; i < table.getRowCount(); i++) {
+			if ((Boolean) table.getValueAt(i, 0) == true) {
+				removeRow.add(i);
+			}
+		}
+		String[] tableArr = deleteAccountInAccountList(table, removeRow);
+		for (String str : tableArr)
+			writeText.append(str);
+		FileWriter writer = new FileWriter(file);
+		writer.write(writeText.toString());
+		writer.close();
+	}
+
+	private String[] deleteAccountInAccountList(JTable table, ArrayList<Integer> ignoreRow) {
+		String[] tempArr = new String[table.getRowCount() - ignoreRow.size()];
+		int index = 0;
+		for (int row = 0; row < table.getRowCount(); row++) {
+			if (ignoreRow.indexOf(row) != -1)
+				continue;
+			StringBuilder temp = new StringBuilder();
+			for (int col = 1; col < table.getColumnCount() - 1; col++)
+				temp.append(table.getValueAt(row, col) + " ");
+			temp.append(table.getValueAt(row, table.getColumnCount() - 1) + "\n");
+			tempArr[index] = temp.toString();
+			index++;
+		}
+		Arrays.sort(tempArr);
+		return tempArr;
+	}
+
+	// 修改帳戶
+	public void modifyAccount(DefaultTableModel tableContext, String selectedCharacter) throws IOException {
+		String file = "data/" + selectedCharacter + "帳戶資料.txt";
+		StringBuilder writeText = new StringBuilder();
+		String[] tableArr = modifyAccountToAccountList(tableContext);
+		for (String str : tableArr)
+			writeText.append(str);
+		FileWriter writer = new FileWriter(file);
+		writer.write(writeText.toString());
+		writer.close();
+	}
+
+	private String[] modifyAccountToAccountList(DefaultTableModel table) {
+		String[] tempArr = new String[table.getRowCount()];
+		for (int row = 0; row < table.getRowCount(); row++) {
+			StringBuilder temp = new StringBuilder();
+			for (int col = 0; col < table.getColumnCount() - 1; col++)
+				temp.append(table.getValueAt(row, col) + " ");
+			temp.append(table.getValueAt(row, table.getColumnCount() - 1) + "\n");
+			tempArr[row] = temp.toString();
+		}
+		Arrays.sort(tempArr);
+		return tempArr;
+	}
+
+	// ===================課程管理===================
+
+	// 新增課程
+	public void addNewCourse(String writeText) throws IOException {
+		String updateText = addCourseToCourseList(writeText);
+		FileWriter writer = new FileWriter("data/課程資料.txt");
+		writer.write(updateText);
+		writer.close();
+	}
+
+	private String addCourseToCourseList(String writeText) throws IOException {
+		String file = "data/課程資料.txt";
+		FileReader fr = null;
+		fr = new FileReader(file);
+		BufferedReader br = new BufferedReader(fr);
+		StringBuilder storeBefore = new StringBuilder();
+		StringBuilder storeAfter = new StringBuilder();
+		while (br.ready()) {
+			String str = br.readLine();
+			if (writeText.compareTo(str) > 0)
+				storeBefore.append(str + '\n');
+			else if (writeText.compareTo(str) < 0)
+				storeAfter.append(str + '\n');
+		}
+		br.close();
+		return storeBefore.toString() + writeText + storeAfter.toString();
+	}
+
+	// 刪除課程
+	public void deleteCourse(JTable table, ArrayList<String[]> originalContext, String selectedSemester)
+			throws IOException {
+		String updateText =deleteCourseInCourseList(table, originalContext, selectedSemester);
+		FileWriter writer = new FileWriter("data/課程資料.txt");
+		writer.write(updateText.toString());
+		writer.close();
+	}
+
+	private String deleteCourseInCourseList(JTable table, ArrayList<String[]> orignalContext, String selectedSemester) {
+		String file = "data/課程資料.txt";
+		StringBuilder writeText = new StringBuilder();
+		ArrayList<Integer> removeRow = new ArrayList<Integer>();
+		for (int i = 0; i < table.getRowCount(); i++) {
+			if ((Boolean) table.getValueAt(i, 0) == true) {
+				removeRow.add(i);
+			}
+		}
+		String[] tempArr = new String[orignalContext.size() - removeRow.size()];
+		int index = 0;
+		int removeIndex = 0;
+		for (int row = 0; row < orignalContext.size(); row++) {
+			if (selectedSemester.equals(orignalContext.get(row)[0])) {
+				if (removeRow.indexOf(removeIndex) != -1) {
+					removeIndex++;
+					continue;
+				}
+				removeIndex++;
+			}
+			StringBuilder temp = new StringBuilder();
+			for (int col = 0; col < orignalContext.get(0).length - 1; col++)
+				temp.append(orignalContext.get(row)[col] + " ");
+			temp.append(orignalContext.get(row)[orignalContext.get(0).length - 1] + "\n");
+			tempArr[index] = temp.toString();
+			index++;
+		}
+		Arrays.sort(tempArr);
+		for (String str : tempArr)
+			writeText.append(str);
+		return writeText.toString();
+	}
+
+	public void modifyCourse(String beforeContext, ArrayList<String[]> thisSemesterContext, String afterContext)
+			throws IOException {
+		FileWriter writer = new FileWriter("data/課程資料.txt");
+		StringBuilder writeText = new StringBuilder();
+		writeText.append(beforeContext);
+		for (int i = 0; i < thisSemesterContext.size(); i++) {
+			int len = thisSemesterContext.get(i).length;
+			for (int j = 0; j < len - 1; j++)
+				writeText.append(thisSemesterContext.get(i)[j] + " ");
+			writeText.append(thisSemesterContext.get(i)[len - 1] + "\n");
+		}
+		writeText.append(afterContext);
+		writer.write(writeText.toString());
+		writer.close();
+	}
+
+	public void addNewStudent(String account, String selectedSemester, String selectedCourseNum) throws IOException {
+		
+		String updateText = addStudentToCourse(account, selectedSemester, selectedCourseNum);
+		FileOutputStream writerStream = new FileOutputStream("data/課程資料.txt");
+		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(writerStream, "UTF-8"));
+		writer.write(updateText.toString());
+		writer.close();
+	}
+
+	private String findStudent(String account) throws IOException {
+		FileReader fr = null;
+		fr = new FileReader("data/學生帳戶資料.txt");
+		BufferedReader br = new BufferedReader(fr);
+		while (br.ready()) {
+			String[] studentInfo = br.readLine().split(" ");
+			if (account.equals(studentInfo[0]))
+				return studentInfo[2];
+		}
+		return "";
+	}
+
+	private String addStudentToCourse(String account, String selectedSemester, String selectedCourseNum)
+			throws IOException {
+		String name = findStudent(account);
+		if (name == "")
+			return "";
+		FileReader fr = null;
+		fr = new FileReader("data/課程資料.txt");
+		BufferedReader br = new BufferedReader(fr);
+		StringBuilder writeText = new StringBuilder();
+		boolean added = false;
+		while (br.ready()) {
+			String course = br.readLine();
+			String[] info = course.split(" ");
+			if (added == false && selectedCourseNum.equals(info[1]) && selectedSemester.equals(info[0])) {
+				String studentList = info[6];
+				String studentAccount = info[7];
+				String[] checkArr = studentAccount.split(",");
+				List<String> checkList = (List<String>) Arrays.asList(checkArr);
+				if (checkList.indexOf(account) != -1) {
+					JOptionPane.showMessageDialog(new JTextField(), "此學生已選修課", "重複選修", JOptionPane.INFORMATION_MESSAGE);
+					return "";
+				}
+				String studentScore = info[8];
+
+				StringBuilder nameText = new StringBuilder();
+				StringBuilder accountText = new StringBuilder();
+				StringBuilder scoreText = new StringBuilder();
+				boolean done = false;
+				if ("未設定".equals(studentList)) {
+					nameText.append(name);
+					accountText.append(account);
+					scoreText.append("-");
+				} else {
+					String[] nameArr = studentList.split(",");
+					String[] accountArr = studentAccount.split(",");
+					String[] scoreArr = studentScore.split(",");
+					if (account.compareTo(nameArr[0]) < 0) {
+						nameText.append(name + "," + nameArr[0]);
+						accountText.append(account + "," + accountArr[0]);
+						scoreText.append("-," + scoreArr[0]);
+						done = true;
+					} else {
+						nameText.append(nameArr[0]);
+						accountText.append(accountArr[0]);
+						scoreText.append(scoreArr[0]);
+					}
+					for (int i = 1; i < nameArr.length; i++) {
+						if (added == false && account.compareTo(accountArr[i]) < 0) {
+							nameText.append("," + name);
+							accountText.append("," + account);
+							scoreText.append("-,");
+						}
+						nameText.append("," + nameArr[i]);
+						accountText.append("," + accountArr[i]);
+						scoreText.append("," + scoreArr[i]);
+					}
+
+				}
+				writeText.append(info[0] + " " + info[1] + " " + info[2] + " " + info[3] + " " + info[4] + " " + info[5]
+						+ " " + nameText.toString() + " " + accountText.toString() + " " + scoreText.toString() + "\n");
+				done = true;
+			} else
+				writeText.append(course + "\n");
+		}
+		br.close();
+		return writeText.toString();
+	}
+
+	public void deleteCourseStudent(JTable table,String account,String selectedSemester) throws IOException {
+			String updateText  = deleteStudentInCourse(table,selectedSemester,account);
+			FileOutputStream writerStream = new FileOutputStream("data/課程資料.txt");
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(writerStream, "UTF-8"));
+			writer.write(updateText);
+			writer.close();
+		
+	}
+
+	private String deleteStudentInCourse(JTable table, String selectedSemester, String deletedAccount)
+			throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader("data/課程資料.txt"));
+		StringBuilder writeText = new StringBuilder();
+		int checkIndex = 0;
+		try {
+			while (br.ready()) {
+				String[] courseInfoList = br.readLine().split(" ");
+				String[] accountInCourse = courseInfoList[7].split(",");
+				String[] nameInCourse = courseInfoList[6].split(",");
+				String[] scoreInCourse = courseInfoList[8].split(",");
+				List<String> checkInCourse = (List<String>) Arrays.asList(accountInCourse);
+				int stuIndex = checkInCourse.indexOf(deletedAccount);
+				writeText.append(courseInfoList[0]);
+				for (int i = 1; i < 6; i++)
+					writeText.append(" " + courseInfoList[i]);
+				if (selectedSemester.equals(courseInfoList[0]) && stuIndex != -1) {
+					if ((Boolean) table.getValueAt(checkIndex, 0) == true) {
+						if (stuIndex != 0) {
+							writeText.append(" " + nameInCourse[0]);
+							for (int i = 1; i < nameInCourse.length; i++) {
+								if (stuIndex == i)
+									continue;
+								writeText.append("," + nameInCourse[i]);
+							}
+							writeText.append(" " + accountInCourse[0]);
+							for (int i = 1; i < accountInCourse.length; i++) {
+								if (stuIndex == i)
+									continue;
+								writeText.append("," + accountInCourse[i]);
+							}
+							writeText.append(" " + scoreInCourse[0]);
+							for (int i = 1; i < scoreInCourse.length; i++) {
+								if (stuIndex == i)
+									continue;
+								writeText.append("," + scoreInCourse[i]);
+							}
+						} else {
+							if (accountInCourse.length == 1) {
+								writeText.append("未設定 未設定 未設定");
+							} else {
+								writeText.append(" " + nameInCourse[1]);
+								for (int i = 2; i < nameInCourse.length; i++) {
+									if (stuIndex == i)
+										continue;
+									writeText.append("," + nameInCourse[i]);
+								}
+								writeText.append(" " + accountInCourse[1]);
+								for (int i = 2; i < accountInCourse.length; i++) {
+									if (stuIndex == i)
+										continue;
+									writeText.append("," + accountInCourse[i]);
+								}
+								writeText.append(" " + scoreInCourse[1]);
+								for (int i = 2; i < scoreInCourse.length; i++) {
+									if (stuIndex == i)
+										continue;
+									writeText.append("," + scoreInCourse[i]);
+								}
+							}
+						}
+					}
+					checkIndex++;
+				} else {
+					for (int i = 6; i < 9; i++)
+						writeText.append(" " + courseInfoList[i]);
+				}
+				writeText.append("\n");
+			}
+			br.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return writeText.toString();
+	}
+
+	
+
+	public void  saveScore(JTable table,String selectedSemester,String selectedCourseNum) throws IOException {
+		String updateText  = updateStudentScoreInCourse(table,selectedSemester,selectedCourseNum);
+		FileOutputStream writerStream = new FileOutputStream("data/課程資料.txt");
+		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(writerStream, "UTF-8"));
+		writer.write(updateText);
+		writer.close();
+	}
+	private String updateStudentScoreInCourse(JTable table,String selectedSemester,String selectedCourseNum) throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader("data/課程資料.txt"));
+		StringBuilder updateText = new StringBuilder();
+		while(br.ready()) {
+			String courseInfoLine = br.readLine();
+			String[] courseInfo = courseInfoLine.split(" ");
+			for(int index = 0;index<courseInfo.length-1;index++)
+				updateText.append(courseInfo[index]+" ");
+			if(selectedSemester.equals(courseInfo[0]) && selectedCourseNum.equals(courseInfo[1])) {
+				updateText.append((String)table.getValueAt(0, 2));
+				for(int i=1;i<table.getRowCount();i++)
+					updateText.append(" "+(String)table.getValueAt(i, 2));
+			}
+			else
+				updateText.append(courseInfo[courseInfo.length-1]);
+			updateText.append("\n");
+		}
+		return updateText.toString();
+	}
+	
+}
