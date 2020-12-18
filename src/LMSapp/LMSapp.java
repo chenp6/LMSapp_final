@@ -10,16 +10,15 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import character.*;
-
 public class LMSapp {
-	//public static Account userAccount ;
+	public static Account userAccount ;
 	//測試時，可以直接用以下身分，不用從登入開始(上面那行要註解掉)
 	//學生
 	//public static Account userAccount = new Student("410877009","123","陳品蓉","108",'s');
 	//教授
 	//public static Account userAccount = new Professor("77001","123","葉道明",'p');
 	//管理員
-	public static Account userAccount = new Manager("7777","1234","黃管理員",'m');
+	//public static Account userAccount = new Manager("7777","1234","黃管理員",'m');
 	
 	
 	//若要從不同頁面測試(不用登入)，到UIframe裡面改JPanel loginPanel = new 你要的Panel();
