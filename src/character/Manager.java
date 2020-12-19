@@ -2,7 +2,6 @@ package character;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -46,7 +45,6 @@ public class Manager extends Account {
 					writeText += temp + "\n";
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		br.close();
@@ -259,6 +257,7 @@ public class Manager extends Account {
 			if (account.equals(studentInfo[0]))
 				return studentInfo[2];
 		}
+		br.close();
 		return "";
 	}
 
