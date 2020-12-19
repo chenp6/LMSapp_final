@@ -23,12 +23,5 @@ public class UIframe extends JFrame {
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
-	
-	//開新panel
-	public void changePanel(JPanel originalPanel,JPanel newPanel) {
-		this.remove(originalPanel);
-		getContentPane().add(newPanel);
-		newPanel.setVisible(true);
-	}
 
 }
