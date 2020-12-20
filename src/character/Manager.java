@@ -2,6 +2,7 @@ package character;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -45,6 +46,7 @@ public class Manager extends Account {
 					writeText += temp + "\n";
 				}
 			} catch (Exception e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		br.close();
@@ -242,10 +244,13 @@ public class Manager extends Account {
 	public void addNewStudent(String account, String selectedSemester, String selectedCourseNum) throws IOException {
 		
 		String updateText = addStudentToCourse(account, selectedSemester, selectedCourseNum);
-		FileOutputStream writerStream = new FileOutputStream("data/課程資料.txt");
-		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(writerStream, "UTF-8"));
-		writer.write(updateText.toString());
-		writer.close();
+		if(updateText!=""){
+			FileOutputStream writerStream = new FileOutputStream("data/課程資料.txt");
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(writerStream, "UTF-8"));
+			writer.write(updateText.toString());
+			writer.close();
+		}
+
 	}
 
 	private String findStudent(String account) throws IOException {
@@ -257,7 +262,6 @@ public class Manager extends Account {
 			if (account.equals(studentInfo[0]))
 				return studentInfo[2];
 		}
-		br.close();
 		return "";
 	}
 
@@ -274,7 +278,7 @@ public class Manager extends Account {
 		while (br.ready()) {
 			String course = br.readLine();
 			String[] info = course.split(" ");
-			if (added == false && selectedCourseNum.equals(info[1]) && selectedSemester.equals(info[0])) {
+			if (selectedCourseNum.equals(info[1]) && selectedSemester.equals(info[0])) {
 				String studentList = info[6];
 				String studentAccount = info[7];
 				String[] checkArr = studentAccount.split(",");
@@ -288,7 +292,6 @@ public class Manager extends Account {
 				StringBuilder nameText = new StringBuilder();
 				StringBuilder accountText = new StringBuilder();
 				StringBuilder scoreText = new StringBuilder();
-				boolean done = false;
 				if ("未設定".equals(studentList)) {
 					nameText.append(name);
 					accountText.append(account);
@@ -297,11 +300,11 @@ public class Manager extends Account {
 					String[] nameArr = studentList.split(",");
 					String[] accountArr = studentAccount.split(",");
 					String[] scoreArr = studentScore.split(",");
-					if (account.compareTo(nameArr[0]) < 0) {
+					if (account.compareTo(accountArr[0]) < 0) {
 						nameText.append(name + "," + nameArr[0]);
 						accountText.append(account + "," + accountArr[0]);
 						scoreText.append("-," + scoreArr[0]);
-						done = true;
+						added = true;
 					} else {
 						nameText.append(nameArr[0]);
 						accountText.append(accountArr[0]);
@@ -312,6 +315,7 @@ public class Manager extends Account {
 							nameText.append("," + name);
 							accountText.append("," + account);
 							scoreText.append("-,");
+							added = true;
 						}
 						nameText.append("," + nameArr[i]);
 						accountText.append("," + accountArr[i]);
@@ -321,7 +325,6 @@ public class Manager extends Account {
 				}
 				writeText.append(info[0] + " " + info[1] + " " + info[2] + " " + info[3] + " " + info[4] + " " + info[5]
 						+ " " + nameText.toString() + " " + accountText.toString() + " " + scoreText.toString() + "\n");
-				done = true;
 			} else
 				writeText.append(course + "\n");
 		}
