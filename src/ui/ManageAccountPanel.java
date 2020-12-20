@@ -35,10 +35,10 @@ public class ManageAccountPanel extends JPanel {
 	public ManageAccountPanel() {
 		// 用戶管理畫面
 		setLayout(null);
-		setBounds(0, 0, 940, 830);
+		setBounds(0,30, 916, 800);
 		JLabel titleInManageAccount = new JLabel("用戶管理");
 		titleInManageAccount.setFont(new Font("微軟正黑體", Font.PLAIN, 60));
-		titleInManageAccount.setBounds(350, -19, 240, 106);
+		titleInManageAccount.setBounds(350, 10, 240, 106);
 		add(titleInManageAccount);
 		JComboBox characterComboInManageAccount = new JComboBox(new Object[] { "請選擇", "學生", "教授", "管理員" });
 		characterComboInManageAccount.setBounds(425, 102, 173, 34);

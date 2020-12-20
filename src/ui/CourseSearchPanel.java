@@ -21,9 +21,12 @@ import javax.swing.table.TableColumn;
 public class CourseSearchPanel extends JPanel {
 	public CourseSearchPanel() {
 		Font textFont = new Font("textField", Font.PLAIN, 16);
-		Font btnFont = new Font("Btn", Font.BOLD & Font.CENTER_BASELINE, 23);
-		setBounds(0, 0, 940, 830);
+		setBounds(0,30, 916, 800);
 		setLayout(null);
+		JLabel title = new JLabel("課程查詢");
+		title.setFont(new Font("微軟正黑體", Font.PLAIN, 60));
+		title.setBounds(347, 0, 240, 106);
+		add(title);
 		JComboBox semesterComboInClassInfo = new JComboBox(new Object[] { "請選擇", "107-2", "108-1", "108-2", "109-1" });
 		JLabel semesterLabelInClassInfo = new JLabel("學期");
 		String[] columns = { "課程代碼", "學期", "課程名稱", "學分", "授課教授", "必/選修", "選修學生清單" };
@@ -51,7 +54,7 @@ public class CourseSearchPanel extends JPanel {
 		}
 		semesterComboInClassInfo.setBounds(400, 100, 100, 40);
 		semesterLabelInClassInfo.setBounds(500, 100, 100, 30);
-		coursePane.setBounds(0, 200, 940, 700);
+		coursePane.setBounds(0, 200, 900, 700);
 		semesterLabelInClassInfo.setFont(textFont);
 		add(semesterComboInClassInfo);
 		add(semesterLabelInClassInfo);

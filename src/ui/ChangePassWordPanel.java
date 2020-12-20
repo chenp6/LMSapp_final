@@ -16,8 +16,12 @@ public class ChangePassWordPanel extends JPanel {
 
 	public ChangePassWordPanel() {
 		Font textFont = new Font("textField", Font.PLAIN, 16);
-		setBounds(0, 0, 940, 830);
+		setBounds(0,30, 916, 800);
 		setLayout(null);
+		JLabel title = new JLabel("修改密碼");
+		title.setFont(new Font("微軟正黑體", Font.PLAIN, 60));
+		title.setBounds(349, 56, 240, 106);
+		add(title);
 		JLabel oldPasswordLabel = new JLabel("舊密碼:");
 		JPasswordField oldPassword = new JPasswordField(16);
 		JLabel newPasswordLabel = new JLabel("新密碼:");

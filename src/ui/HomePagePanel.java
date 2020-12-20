@@ -12,23 +12,21 @@ import javax.swing.JTextPane;
 public class HomePagePanel extends JPanel {
 
 	public HomePagePanel() {
-		Font textFont = new Font("textField", Font.PLAIN, 16);
-		Font btnFont = new Font("Btn", Font.BOLD & Font.CENTER_BASELINE, 23);
-		setBounds(0, 0, 940, 830);
+		setBounds(0,30, 916, 800);
 		setLayout(null);
 		String characterStr="";
 		switch (LMSapp.userAccount.character) {
 		case 'm':
 			characterStr = "管理員";
-			add(new ManagerMenuPanel());
+		//	LMSapp.frame.add(new ManagerMenuPanel());
 			break;
 		case 'p':
 			characterStr = "教授";
-			add(new ProfessorMenuPanel());
+		//	LMSapp.frame.add(new ProfessorMenuPanel());
 			break;
 		case 's':
 			characterStr = "同學";
-			add(new StudentMenuPanel());
+		//	LMSapp.frame.add(new StudentMenuPanel());
 			break;
 		}
 		String welcomeStr = "歡迎回來!!!  "+LMSapp.userAccount.name+" "+characterStr+"，\n請按上方選單按鈕進行操作";

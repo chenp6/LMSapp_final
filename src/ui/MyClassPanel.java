@@ -1,5 +1,6 @@
 package ui;
 
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -21,6 +22,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
+
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
@@ -37,8 +39,12 @@ public class MyClassPanel extends JPanel {
 	 我的課程(學生)
 	 */
 	public MyClassPanel() {
-		setBounds(0, 0, 940, 830);
 		setLayout(null);
+		setBounds(0,30, 916, 800);
+		JLabel title = new JLabel("我的課程");
+		title.setFont(new Font("微軟正黑體", Font.PLAIN, 60));
+		title.setBounds(334, 10, 240, 106);
+		add(title);
 		JComboBox semesterComboInMyClass = new JComboBox(new Object[] { "請選擇", "107-2", "108-1", "108-2", "109-1" });
 		JLabel semesterLabelInMyClass = new JLabel("學期");
 		DefaultTableModel tableMInStudentScore;
@@ -55,11 +61,11 @@ public class MyClassPanel extends JPanel {
 			}
 		}
 		JButton printTranscriptBtn = new JButton("列印總成績單");
-		printTranscriptBtn.setBounds(321, 54, 271, 31);
+		printTranscriptBtn.setBounds(319, 98, 271, 31);
 		add(printTranscriptBtn);
-		semesterComboInMyClass.setBounds(400, 100, 100, 40);
-		semesterLabelInMyClass.setBounds(500, 100, 100, 30);
-		coursePaneInMyClass.setBounds(0, 200, 940, 700);
+		semesterComboInMyClass.setBounds(368, 139, 120, 40);
+		semesterLabelInMyClass.setBounds(498, 144, 100, 30);
+		coursePaneInMyClass.setBounds(0, 200, 900, 700);
 		add(semesterComboInMyClass);
 		add(semesterLabelInMyClass);
 		add(coursePaneInMyClass);

@@ -26,10 +26,10 @@ public class ManageCourseScorePanel extends JPanel {
 	
 	public ManageCourseScorePanel() {
 		setLayout(null);
-		setBounds(0, 0, 918, 828);
+		setBounds(0,30, 916, 800);
 		JLabel titleInManageCourseScore= new JLabel("學生成績管理");
 		 titleInManageCourseScore.setFont(new Font("微軟正黑體", Font.PLAIN, 60));
-		 titleInManageCourseScore.setBounds(300, -15, 491, 106);
+		 titleInManageCourseScore.setBounds(300, 0, 491, 106);
 		add(titleInManageCourseScore);		 
 		JLabel semesterLabelInManageCourseScore = new JLabel("學期:");
 		semesterLabelInManageCourseScore.setHorizontalAlignment(SwingConstants.CENTER);

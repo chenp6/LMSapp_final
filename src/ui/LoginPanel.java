@@ -20,23 +20,23 @@ public class LoginPanel extends JPanel {
 		
 		Font textFont = new Font("textField", Font.PLAIN, 16);
 		Font btnFont = new Font("Btn", Font.BOLD & Font.CENTER_BASELINE, 23);
-		setBounds(0, 0, 940, 830);
+		setBounds(0,30, 916, 800);
 		setLayout(null);
 		JLabel accountLabel = new JLabel("帳號:");
-		accountLabel.setBounds(290, 285, 71, 23);
+		accountLabel.setBounds(283, 184, 71, 23);
 		accountLabel.setFont(textFont);
 		JTextField account = new JTextField(16);// 帳號輸入列
 		account.setFont(textFont);
-		account.setBounds(349, 268, 200, 40);
+		account.setBounds(342, 167, 200, 40);
 		JLabel passwordLabel = new JLabel("密碼:");
 		passwordLabel.setFont(textFont);
-		passwordLabel.setBounds(290, 340, 71, 23);
+		passwordLabel.setBounds(283, 239, 71, 23);
 		JPasswordField password = new JPasswordField(16);// 密碼輸入列
 		password.setFont(textFont);
-		password.setBounds(349, 323, 200, 40);
+		password.setBounds(342, 222, 200, 40);
 		JButton loginBtn = new JButton("登入");
 		loginBtn.setFont(btnFont);
-		loginBtn.setBounds(384, 388, 100, 40);
+		loginBtn.setBounds(377, 287, 100, 40);
 		add(accountLabel);
 		add(account);
 		add(passwordLabel);
@@ -49,9 +49,8 @@ public class LoginPanel extends JPanel {
 				try {
 					Account login = verifyAccount(account.getText(), new String(password.getPassword()));
 					if (login.character != 'e') {
-						getThisPanel().setVisible(false);
 						LMSapp.userAccount = login;
-						LMSapp.frame.changePanel(getThisPanel(),new HomePagePanel());
+						//LMSapp.frame.changePanel(new HomePagePanel());
 					} else
 						return;
 				} catch (IOException e1) {
@@ -61,9 +60,6 @@ public class LoginPanel extends JPanel {
 
 	}
 	
-	JPanel getThisPanel(){
-		return this;
-	}
 	
 	Account verifyAccount(String account, String password) throws IOException {
 		FileReader fr;

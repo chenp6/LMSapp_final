@@ -31,7 +31,7 @@ public class ManageCourseStudentPanel extends JPanel {
 
 	public ManageCourseStudentPanel() {
 		setLayout(null);
-		setBounds(0, 0, 918, 828);
+		setBounds(0,30, 916, 800);
 		JLabel titleInManageCourseStudent = new JLabel("學生選修課程管理");
 		titleInManageCourseStudent.setFont(new Font("微軟正黑體", Font.PLAIN, 60));
 		titleInManageCourseStudent.setBounds(213, -15, 491, 106);
