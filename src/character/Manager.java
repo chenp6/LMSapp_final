@@ -314,7 +314,7 @@ public class Manager extends Account {
 						if (added == false && account.compareTo(accountArr[i]) < 0) {
 							nameText.append("," + name);
 							accountText.append("," + account);
-							scoreText.append("-,");
+							scoreText.append(",-");
 							added = true;
 						}
 						nameText.append("," + nameArr[i]);
@@ -437,7 +437,7 @@ public class Manager extends Account {
 			if(selectedSemester.equals(courseInfo[0]) && selectedCourseNum.equals(courseInfo[1])) {
 				updateText.append((String)table.getValueAt(0, 2));
 				for(int i=1;i<table.getRowCount();i++)
-					updateText.append(" "+(String)table.getValueAt(i, 2));
+					updateText.append(","+(String)table.getValueAt(i, 2));
 			}
 			else
 				updateText.append(courseInfo[courseInfo.length-1]);
