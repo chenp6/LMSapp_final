@@ -29,16 +29,7 @@ public class UIframe extends JFrame {
 	}
 	
 	
-	//切換panel
-	public void changePanel(JPanel newPanel) {
-		this.remove(contextPanel);
-		contextPanel = newPanel;
-		newPanel.setVisible(true);
-		getContentPane().add(contextPanel);
-		contextPanel.setVisible(true);
-		contextPanel.repaint();
-		this.repaint();
-	}
+
 	
 	
 }
