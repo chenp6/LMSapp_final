@@ -5,17 +5,22 @@ package ui;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JMenuBar;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 
 
 public class UIframe extends JFrame {
+	public  JPanel contextPanel = new JPanel();
 	public UIframe() {
 			
 			setTitle("高燕大學生成績管理系統");
-			setSize(940, 884);
+			setSize(916, 884);
 			getContentPane().setLayout(null);
-			JPanel loginPanel = new  ManageCourseScorePanel();//測試時，JPanel loginPanel = new 你要的Panel();
 			
-			getContentPane().add(loginPanel);
+			contextPanel = new LoginPanel();//測試panel時替換這行的LoginPanel()
+			contextPanel.setBounds(0, 50, 916, 614);
+			getContentPane().add(contextPanel);
 			
 			// 顯示JFrame
 			setVisible(true);
@@ -23,5 +28,17 @@ public class UIframe extends JFrame {
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
-
+	
+	//切換panel
+	public void changePanel(JPanel newPanel) {
+		this.remove(contextPanel);
+		contextPanel = newPanel;
+		newPanel.setVisible(true);
+		getContentPane().add(contextPanel);
+		contextPanel.setVisible(true);
+		contextPanel.repaint();
+		this.repaint();
+	}
+	
+	
 }

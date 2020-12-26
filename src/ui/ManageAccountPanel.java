@@ -97,13 +97,6 @@ public class ManageAccountPanel extends JPanel {
 					yearTextField.setBounds(410, 178, 231, 29);
 					JButton sureAddInManageAccount = new JButton("確認");
 					sureAddInManageAccount.setBounds(410, 221, 231, 29);
-					nameLabelInManagerAccount.setVisible(false);
-					nameTextFieldInManagerAccount.setVisible(false);
-					newAccountLabel.setVisible(false);
-					newAccountTextField.setVisible(false);
-					newPasswordLabelInManagerAccount.setVisible(false);
-					newPasswordTextFileInManagerAccount.setVisible(false);
-					sureAddInManageAccount.setVisible(false);
 					actionPanelInAccountManage.add(hint);
 					actionPanelInAccountManage.add(nameLabelInManagerAccount);
 					actionPanelInAccountManage.add(nameTextFieldInManagerAccount);
@@ -114,13 +107,7 @@ public class ManageAccountPanel extends JPanel {
 					actionPanelInAccountManage.add(yearLabel);
 					actionPanelInAccountManage.add(yearTextField);
 					actionPanelInAccountManage.add(sureAddInManageAccount);
-					nameLabelInManagerAccount.setVisible(true);
-					nameTextFieldInManagerAccount.setVisible(true);
-					newAccountLabel.setVisible(true);
-					newAccountTextField.setVisible(true);
-					newPasswordLabelInManagerAccount.setVisible(true);
-					newPasswordTextFileInManagerAccount.setVisible(true);
-					sureAddInManageAccount.setVisible(true);
+					actionPanelInAccountManage.repaint();
 					if ("學生".equals(selectedCharacter)) {
 						yearLabel.setVisible(true);
 						yearTextField.setVisible(true);

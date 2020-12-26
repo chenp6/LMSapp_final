@@ -100,18 +100,6 @@ public class ManageCourseInfoPanel extends JPanel {
 					typeLabel.setBounds(310, 220, 111, 23);
 					JButton sureAddInManageCourseInfo = new JButton("確認");
 					sureAddInManageCourseInfo.setBounds(360, 270, 231, 29);
-					numLabelInManageCourseInfo.setVisible(false);
-					numTextFieldInManageCourseInfo.setVisible(false);
-					nameLabelInManageCourseInfo.setVisible(false);
-					nameTextFieldInManageCourseInfo.setVisible(false);
-					newCreditLabel.setVisible(false);
-					newCreditTextField.setVisible(false);
-					newProfessorLabelInManageCourseInfo.setVisible(false);
-					newProfessorTextFileInManageCourseInfo.setVisible(false);
-					typeCom.setVisible(false);
-					typeElect.setVisible(false);
-					typeLabel.setVisible(false);
-					sureAddInManageCourseInfo.setVisible(false);
 					actionPanelInManageCourseInfo.add(numLabelInManageCourseInfo);
 					actionPanelInManageCourseInfo.add(numTextFieldInManageCourseInfo);
 					actionPanelInManageCourseInfo.add(nameLabelInManageCourseInfo);
@@ -124,18 +112,8 @@ public class ManageCourseInfoPanel extends JPanel {
 					actionPanelInManageCourseInfo.add(typeElect);
 					actionPanelInManageCourseInfo.add(typeLabel);
 					actionPanelInManageCourseInfo.add(sureAddInManageCourseInfo);
-					numLabelInManageCourseInfo.setVisible(true);
-					numTextFieldInManageCourseInfo.setVisible(true);
-					nameLabelInManageCourseInfo.setVisible(true);
-					nameTextFieldInManageCourseInfo.setVisible(true);
-					newCreditLabel.setVisible(true);
-					newCreditTextField.setVisible(true);
-					newProfessorLabelInManageCourseInfo.setVisible(true);
-					newProfessorTextFileInManageCourseInfo.setVisible(true);
-					typeCom.setVisible(true);
-					typeElect.setVisible(true);
-					typeLabel.setVisible(true);
-					sureAddInManageCourseInfo.setVisible(true);
+					actionPanelInManageCourseInfo.repaint();
+
 					sureAddInManageCourseInfo.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
 							String selectedSemester = (String) semesterComboInManageCourseInfo.getSelectedItem();

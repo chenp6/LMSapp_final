@@ -18,15 +18,15 @@ public class HomePagePanel extends JPanel {
 		switch (LMSapp.userAccount.character) {
 		case 'm':
 			characterStr = "管理員";
-		//	LMSapp.frame.add(new ManagerMenuPanel());
+			LMSapp.frame.add(new ManagerMenuPanel());
 			break;
 		case 'p':
 			characterStr = "教授";
-		//	LMSapp.frame.add(new ProfessorMenuPanel());
+			LMSapp.frame.add(new ProfessorMenuPanel());
 			break;
 		case 's':
 			characterStr = "同學";
-		//	LMSapp.frame.add(new StudentMenuPanel());
+			LMSapp.frame.add(new StudentMenuPanel());
 			break;
 		}
 		String welcomeStr = "歡迎回來!!!  "+LMSapp.userAccount.name+" "+characterStr+"，\n請按上方選單按鈕進行操作";
