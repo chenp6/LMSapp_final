@@ -14,10 +14,21 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import java.awt.Color;
 
 public class LoginPanel extends JPanel {
 	public LoginPanel() {
+		String titleStr = "高燕大學生成績管理系統";
 		
+		JTextPane titleText = new JTextPane();
+		titleText.setBackground(new Color(255, 255, 255));
+		titleText.setFont(new Font("微軟正黑體", Font.PLAIN, 60));
+		titleText.setText(titleStr);
+		titleText.setEditable(false);
+		titleText.setBackground(getBackground());
+		titleText.setBounds(108, 57, 699, 100);
+		add(titleText);
 		Font textFont = new Font("textField", Font.PLAIN, 16);
 		Font btnFont = new Font("Btn", Font.BOLD & Font.CENTER_BASELINE, 23);
 		setBounds(0,30, 916, 800);
@@ -50,7 +61,7 @@ public class LoginPanel extends JPanel {
 					Account login = verifyAccount(account.getText(), new String(password.getPassword()));
 					if (login.character != 'e') {
 						LMSapp.userAccount = login;
-						//LMSapp.frame.changePanel(new HomePagePanel());
+						LMSapp.frame.changePanel(new HomePagePanel());
 					} else
 						return;
 				} catch (IOException e1) {

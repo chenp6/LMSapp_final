@@ -36,6 +36,7 @@ public class Professor extends Account {
 					writeText += temp + "\n";
 				}
 			} catch (Exception e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		br.close();

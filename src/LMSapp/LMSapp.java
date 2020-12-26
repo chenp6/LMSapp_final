@@ -2,11 +2,15 @@ package LMSapp;
 import ui.*;
 
 
+import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 import character.*;
+
 public class LMSapp {
 	public static Account userAccount ;
 	//測試時，可以直接用以下身分，不用從登入開始(上面那行要註解掉)
@@ -22,6 +26,7 @@ public class LMSapp {
 	
 	
 	public static UIframe frame =new UIframe();
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -35,7 +40,7 @@ public class LMSapp {
 			}
 		});
 	}
-
+	
 
 
 }
