@@ -34,20 +34,20 @@ public class LoginPanel extends JPanel {
 		setBounds(0,30, 916, 800);
 		setLayout(null);
 		JLabel accountLabel = new JLabel("帳號:");
-		accountLabel.setBounds(283, 184, 71, 23);
+		accountLabel.setBounds(332, 184, 71, 23);
 		accountLabel.setFont(textFont);
 		JTextField account = new JTextField(16);// 帳號輸入列
 		account.setFont(textFont);
-		account.setBounds(342, 167, 200, 40);
+		account.setBounds(391, 167, 200, 40);
 		JLabel passwordLabel = new JLabel("密碼:");
 		passwordLabel.setFont(textFont);
-		passwordLabel.setBounds(283, 239, 71, 23);
+		passwordLabel.setBounds(332, 239, 71, 23);
 		JPasswordField password = new JPasswordField(16);// 密碼輸入列
 		password.setFont(textFont);
-		password.setBounds(342, 222, 200, 40);
+		password.setBounds(391, 222, 200, 40);
 		JButton loginBtn = new JButton("登入");
 		loginBtn.setFont(btnFont);
-		loginBtn.setBounds(377, 287, 100, 40);
+		loginBtn.setBounds(408, 287, 100, 40);
 		add(accountLabel);
 		add(account);
 		add(passwordLabel);
