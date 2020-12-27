@@ -30,6 +30,7 @@ public class UIframe extends JFrame {
 		remove(contextPanel);
 		contextPanel = newPanel;
 		add(contextPanel);
+		contextPanel.repaint();
 		repaint();
 	}
 
