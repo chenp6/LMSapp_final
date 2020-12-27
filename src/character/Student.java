@@ -93,7 +93,7 @@ public class Student extends Account {
 			document.add(new Paragraph( LMSapp.userAccount.account +  LMSapp.userAccount.name + "的成績單\n\n", chinessFont));
 			PdfPTable scoreTable = new PdfPTable(6);
 			scoreTable.setWidths(new float[] { 10f, 15f, 50f, 10f, 13f, 10f });
-			scoreTable.addCell(new PdfPCell(new Paragraph("<html><body>學期</body></html>")));
+			scoreTable.addCell(new PdfPCell(new Paragraph("學期", chinessFont)));
 			scoreTable.addCell(new PdfPCell(new Paragraph("課程代碼", chinessFont)));
 			scoreTable.addCell(new PdfPCell(new Paragraph("課程名稱", chinessFont)));
 			scoreTable.addCell(new PdfPCell(new Paragraph("學分", chinessFont)));

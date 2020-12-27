@@ -55,7 +55,7 @@ public class StudentMenu extends JPanel {
 		myClass.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				LMSapp.frame.changePage(new MyClassPanel());
+				LMSapp.frame.changePage(new StudentMyClassPanel());
 			}
 		});
 
