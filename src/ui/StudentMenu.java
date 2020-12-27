@@ -71,6 +71,8 @@ public class StudentMenu extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				LMSapp.frame.changePage(new LoginPanel());
 				LMSapp.frame.remove(getThisJPanel());
+				LMSapp.frame.repaint();
+
 			}
 		});
 	}
