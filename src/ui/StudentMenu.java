@@ -1,4 +1,4 @@
-package testing;
+package ui;
 
 import javax.swing.JPanel;
 import javax.swing.JMenuBar;
