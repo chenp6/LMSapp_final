@@ -61,7 +61,7 @@ public class LoginPanel extends JPanel {
 					Account login = verifyAccount(account.getText(), new String(password.getPassword()));
 					if (login.character != 'e') {
 						LMSapp.userAccount = login;
-						LMSapp.frame.changePanel(new HomePagePanel());
+						LMSapp.frame.changePage(new HomePagePanel());
 					} else
 						return;
 				} catch (IOException e1) {
