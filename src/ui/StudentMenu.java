@@ -8,12 +8,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Font;
 import LMSapp.*;
-public class ProfessorMenu extends JPanel {
+public class StudentMenu extends JPanel {
 
 	/**
 	 * Create the panel.
 	 */
-	public ProfessorMenu() {
+	public StudentMenu() {
 		Font menuFont = new Font("Btn", Font.BOLD & Font.CENTER_BASELINE, 23);
 		Font menuItemFont = new Font("menuItem", Font.BOLD & Font.CENTER_BASELINE, 18);
 
@@ -22,19 +22,19 @@ public class ProfessorMenu extends JPanel {
 		add(menuBar);
 		
 		JMenu accountManagement = new JMenu("帳戶管理");
-		menuBar.add(accountManagement);
 		accountManagement.setFont(menuFont);
-
+		menuBar.add(accountManagement);
+		
 		JMenuItem modifyPassword = new JMenuItem("修改密碼");
-		accountManagement.add(modifyPassword);
 		modifyPassword.setFont(menuItemFont);
-		modifyPassword.addActionListener(new ActionListener(){
+		accountManagement.add(modifyPassword);
+		modifyPassword.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				LMSapp.frame.changePage(new ChangePassWordPanel());
 			}
 		});
-
+		
 		JMenu classInformation = new JMenu("課程資訊");
 		menuBar.add(classInformation);
 		classInformation.setFont(menuFont);
@@ -49,17 +49,13 @@ public class ProfessorMenu extends JPanel {
 			}
 		});
 
-		JMenu professorOffice = new JMenu("教授辦公室");
-		menuBar.add(professorOffice);
-		professorOffice.setFont(menuFont);
-
-		JMenuItem studentScoreManagement = new JMenuItem("學生成績管理");
-		professorOffice.add(studentScoreManagement);
-		studentScoreManagement.setFont(menuItemFont);
-		studentScoreManagement.addActionListener(new ActionListener(){
+		JMenuItem myClass = new JMenuItem("我的課程");
+		classInformation.add(myClass);
+		myClass.setFont(menuItemFont);
+		myClass.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				LMSapp.frame.changePage(new ProfessorCourseScorePanel());
+				LMSapp.frame.changePage(new MyClassPanel());
 			}
 		});
 
@@ -82,5 +78,5 @@ public class ProfessorMenu extends JPanel {
 	public JPanel getThisJPanel(){
 		return this;
 	}
-	}
 
+}

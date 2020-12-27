@@ -5,9 +5,7 @@ package ui;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JMenuBar;
-import javax.swing.JButton;
-import javax.swing.JLabel;
+
 
 
 public class UIframe extends JFrame {
@@ -28,7 +26,12 @@ public class UIframe extends JFrame {
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
-	
+	public void changePage(JPanel newPanel){
+		remove(contextPanel);
+		contextPanel = newPanel;
+		add(contextPanel);
+		repaint();
+	}
 
 	
 	
