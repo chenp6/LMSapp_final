@@ -100,13 +100,13 @@ public class ProfessorCourseScorePanel extends JPanel {
                             JScrollPane accountPaneInCourseScore = new JScrollPane(tableInCourseScore);
                             accountPaneInCourseScore.setBounds(25, 250, 850, 300);
                             accountPaneInCourseScore .setVisible(false);
-                            getThisPanel().add(accountPaneInCourseScore);
+                            getThisJPanel().add(accountPaneInCourseScore);
                             accountPaneInCourseScore .setVisible(true);
                             JButton saveChangeBtnInCourseScore = new JButton("儲存變更");
                             saveChangeBtnInCourseScore.setVisible(false);
                             saveChangeBtnInCourseScore.setBounds(400, 570, 100, 34);
-                            getThisPanel().add(saveChangeBtnInCourseScore);
-                            saveChangeBtnInCourseScore.setVisible(true);
+                            getThisJPanel().add(saveChangeBtnInCourseScore);
+                            getThisJPanel().repaint();
                             saveChangeBtnInCourseScore.addActionListener(new ActionListener() {
                                 @Override
                                 public void actionPerformed(ActionEvent arg0) {
@@ -146,10 +146,9 @@ public class ProfessorCourseScorePanel extends JPanel {
         } catch (IOException e1) {}
         return courseListInAddStudent.toArray();
     }
-
-    public JPanel getThisPanel() {
-        return this;
-    }
+	public JPanel getThisJPanel() {
+		return this;
+	}
     static void cleanTable(DefaultTableModel tableM) {
         while (tableM.getRowCount() > 0)
             tableM.removeRow(0);

@@ -25,7 +25,7 @@ public class CourseSearchPanel extends JPanel {
 		setLayout(null);
 		JLabel title = new JLabel("課程查詢");
 		title.setFont(new Font("微軟正黑體", Font.PLAIN, 60));
-		title.setBounds(347, 0, 240, 106);
+		title.setBounds(338, 0, 240, 106);
 		add(title);
 		JComboBox semesterComboInClassInfo = new JComboBox(new Object[] { "請選擇", "107-2", "108-1", "108-2", "109-1" });
 		JLabel semesterLabelInClassInfo = new JLabel("學期");
@@ -54,7 +54,7 @@ public class CourseSearchPanel extends JPanel {
 		}
 		semesterComboInClassInfo.setBounds(400, 100, 100, 40);
 		semesterLabelInClassInfo.setBounds(500, 100, 100, 30);
-		coursePane.setBounds(0, 200, 900, 700);
+		coursePane.setBounds(8, 200, 900, 700);
 		semesterLabelInClassInfo.setFont(textFont);
 		add(semesterComboInClassInfo);
 		add(semesterLabelInClassInfo);

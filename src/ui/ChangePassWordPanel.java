@@ -85,7 +85,4 @@ public class ChangePassWordPanel extends JPanel {
 		});
 	}
 	
-	JPanel getThisPanel() {
-		return this;
-	}
 }

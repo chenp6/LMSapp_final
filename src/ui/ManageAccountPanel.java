@@ -1,4 +1,5 @@
 package ui;
+
 import LMSapp.*;
 import java.awt.Component;
 import java.awt.Font;
@@ -35,10 +36,10 @@ public class ManageAccountPanel extends JPanel {
 	public ManageAccountPanel() {
 		// 用戶管理畫面
 		setLayout(null);
-		setBounds(0,30, 916, 800);
+		setBounds(0, 30, 916, 800);
 		JLabel titleInManageAccount = new JLabel("用戶管理");
 		titleInManageAccount.setFont(new Font("微軟正黑體", Font.PLAIN, 60));
-		titleInManageAccount.setBounds(350, 10, 240, 106);
+		titleInManageAccount.setBounds(350, 15, 240, 106);
 		add(titleInManageAccount);
 		JComboBox characterComboInManageAccount = new JComboBox(new Object[] { "請選擇", "學生", "教授", "管理員" });
 		characterComboInManageAccount.setBounds(425, 102, 173, 34);
@@ -54,60 +55,59 @@ public class ManageAccountPanel extends JPanel {
 		add(actionChoiceComboInManageAccount);
 		JButton startChangeBtnInAccountManage = new JButton("開始");
 		startChangeBtnInAccountManage.setBounds(425, 202, 111, 31);
-		JPanel actionPanelInAccountManage = new JPanel();
-		actionPanelInAccountManage.setBounds(15, 238, 896, 634);
-		actionPanelInAccountManage.setLayout(null);
-		add(actionPanelInAccountManage);
+		JPanel actionPanel = new JPanel();
+		actionPanel.setBounds(15, 238, 896, 634);
+		actionPanel.setLayout(null);
+		add(actionPanel);
 		add(startChangeBtnInAccountManage);
-		
-		
+
 		startChangeBtnInAccountManage.addActionListener(new ActionListener() {
 			@SuppressWarnings("serial")
 			public void actionPerformed(ActionEvent arg0) {
-				actionPanelInAccountManage.removeAll();
-				actionPanelInAccountManage.repaint();
-				actionPanelInAccountManage.revalidate();
+				actionPanel.removeAll();
+				actionPanel.repaint();
+				actionPanel.revalidate();
 				String selectedCharacter = (String) characterComboInManageAccount.getSelectedItem();
 				String selectedAction = (String) actionChoiceComboInManageAccount.getSelectedItem();
-				if ("請選擇".equals(selectedCharacter)  || "請選擇".equals(selectedAction)) {
+				if ("請選擇".equals(selectedCharacter) || "請選擇".equals(selectedAction)) {
 					return;
 				}
 				switch (selectedAction) {
 				case "新增":
-					JLabel nameLabelInManagerAccount = new JLabel("帳戶姓名:");
-					JTextField nameTextFieldInManagerAccount = new JTextField();
+					JLabel nameLabel = new JLabel("帳戶姓名:");
+					JTextField nameTextField = new JTextField();
 					JLabel newAccountLabel = new JLabel("新增帳號:");
 					JTextField newAccountTextField = new JTextField();
 					JLabel hint = new JLabel("注意:學生帳號為9碼，教授為5碼，管理員為4碼");
-					JLabel newPasswordLabelInManagerAccount = new JLabel("新增密碼:");
-					JTextField newPasswordTextFileInManagerAccount = new JTextField();
+					JLabel newPasswordLabel = new JLabel("新增密碼:");
+					JTextField newPasswordTextFile = new JTextField();
 					JLabel yearLabel = new JLabel("入學年度:");
 					JTextField yearTextField = new JTextField();
 					hint.setBounds(340, 0, 300, 23);
-					nameLabelInManagerAccount.setBounds(340, 26, 102, 23);
-					nameTextFieldInManagerAccount.setBounds(410, 26, 231, 29);
+					nameLabel.setBounds(340, 26, 102, 23);
+					nameTextField.setBounds(410, 26, 231, 29);
 					newAccountLabel.setBounds(340, 81, 102, 23);
 					newAccountTextField.setBounds(410, 81, 231, 29);
 					newAccountTextField.setColumns(9);
-					newPasswordLabelInManagerAccount.setBounds(340, 135, 102, 23);
-					newPasswordTextFileInManagerAccount.setColumns(16);
-					newPasswordTextFileInManagerAccount.setBounds(410, 135, 231, 29);
+					newPasswordLabel.setBounds(340, 135, 102, 23);
+					newPasswordTextFile.setColumns(16);
+					newPasswordTextFile.setBounds(410, 135, 231, 29);
 					yearLabel.setBounds(340, 178, 111, 23);
 					yearTextField.setColumns(16);
 					yearTextField.setBounds(410, 178, 231, 29);
 					JButton sureAddInManageAccount = new JButton("確認");
 					sureAddInManageAccount.setBounds(410, 221, 231, 29);
-					actionPanelInAccountManage.add(hint);
-					actionPanelInAccountManage.add(nameLabelInManagerAccount);
-					actionPanelInAccountManage.add(nameTextFieldInManagerAccount);
-					actionPanelInAccountManage.add(newAccountLabel);
-					actionPanelInAccountManage.add(newAccountTextField);
-					actionPanelInAccountManage.add(newPasswordLabelInManagerAccount);
-					actionPanelInAccountManage.add(newPasswordTextFileInManagerAccount);
-					actionPanelInAccountManage.add(yearLabel);
-					actionPanelInAccountManage.add(yearTextField);
-					actionPanelInAccountManage.add(sureAddInManageAccount);
-					actionPanelInAccountManage.repaint();
+					actionPanel.add(hint);
+					actionPanel.add(nameLabel);
+					actionPanel.add(nameTextField);
+					actionPanel.add(newAccountLabel);
+					actionPanel.add(newAccountTextField);
+					actionPanel.add(newPasswordLabel);
+					actionPanel.add(newPasswordTextFile);
+					actionPanel.add(yearLabel);
+					actionPanel.add(yearTextField);
+					actionPanel.add(sureAddInManageAccount);
+					actionPanel.repaint();
 					if ("學生".equals(selectedCharacter)) {
 						yearLabel.setVisible(true);
 						yearTextField.setVisible(true);
@@ -119,32 +119,33 @@ public class ManageAccountPanel extends JPanel {
 						public void actionPerformed(ActionEvent e) {
 							if (("學生".equals(selectedCharacter) && newAccountTextField.getText().length() != 9)
 									|| ("教授".equals(selectedCharacter) && newAccountTextField.getText().length() != 5)
-									|| ("管理員".equals(selectedCharacter) && newAccountTextField.getText().length() != 4)) {
+									|| ("管理員".equals(selectedCharacter)
+											&& newAccountTextField.getText().length() != 4)) {
 								JOptionPane.showMessageDialog(new JTextField(), "格式不符，請重新填寫", "新增帳戶失敗",
 										JOptionPane.PLAIN_MESSAGE);
 								newAccountTextField.setText("");
-								newPasswordTextFileInManagerAccount.setText("");
-								nameTextFieldInManagerAccount.setText("");
+								newPasswordTextFile.setText("");
+								nameTextField.setText("");
 								yearTextField.setText("");
 								return;
 							}
 							String selectedCharacter = (String) characterComboInManageAccount.getSelectedItem();
 							StringBuilder newInfo = new StringBuilder();
 							newInfo.append(newAccountTextField.getText() + " ");
-							newInfo.append(newPasswordTextFileInManagerAccount.getText() + " ");
-							newInfo.append(nameTextFieldInManagerAccount.getText() + " ");
+							newInfo.append(newPasswordTextFile.getText() + " ");
+							newInfo.append(nameTextField.getText() + " ");
 							try {
 								if ("學生".equals(selectedCharacter))
 									newInfo.append(yearTextField.getText() + " ");
 								newInfo.append("\n");
-								if(LMSapp.userAccount instanceof Manager)
-									((Manager)LMSapp.userAccount).addNewAccount(selectedCharacter, newInfo.toString());
+								if (LMSapp.userAccount instanceof Manager)
+									((Manager) LMSapp.userAccount).addNewAccount(selectedCharacter, newInfo.toString());
 							} catch (IOException e1) {
 								e1.printStackTrace();
 							}
 							newAccountTextField.setText("");
-							newPasswordTextFileInManagerAccount.setText("");
-							nameTextFieldInManagerAccount.setText("");
+							newPasswordTextFile.setText("");
+							nameTextField.setText("");
 							yearTextField.setText("");
 						}
 					});
@@ -216,15 +217,16 @@ public class ManageAccountPanel extends JPanel {
 					JScrollPane accountPaneInDeleteAccount = new JScrollPane(listTableInDeleteAccount);
 					accountPaneInDeleteAccount.setBounds(25, 20, 850, 300);
 					accountPaneInDeleteAccount.setVisible(true);
-					actionPanelInAccountManage.add(accountPaneInDeleteAccount);
-					actionPanelInAccountManage.add(deleteSureBtn);
+					actionPanel.add(accountPaneInDeleteAccount);
+					actionPanel.add(deleteSureBtn);
 					deleteSureBtn.setVisible(true);
 					deleteSureBtn.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							try {
-								if(LMSapp.userAccount instanceof Manager)
-									((Manager)LMSapp.userAccount).deleteAccount(listTableInDeleteAccount, selectedCharacter);
+								if (LMSapp.userAccount instanceof Manager)
+									((Manager) LMSapp.userAccount).deleteAccount(listTableInDeleteAccount,
+											selectedCharacter);
 								for (int i = 0; i < listTableInDeleteAccount.getRowCount(); i++) {
 									if ((Boolean) listTableInDeleteAccount.getValueAt(i, 0) == true) {
 										tableMInDeleteAccount.removeRow(i);
@@ -240,67 +242,110 @@ public class ManageAccountPanel extends JPanel {
 					break;
 				// L----修改帳戶
 				case "修改":
-					JButton modifySureBtn = new JButton("確定更改");
-					modifySureBtn.setBounds(400, 340, 111, 40);
-					modifySureBtn.setVisible(false);
-					DefaultTableModel tableMInModifyAccount;
-					String file = "";
-					JTable listTableInModifyAccount;
-					file = "data/" + selectedCharacter + "帳戶資料.txt";
-					FileReader frInModifyAccount;
-					try {
-						frInModifyAccount = new FileReader(file);
-					} catch (FileNotFoundException e1) {
-						return;
-					}
-					BufferedReader brInModifyAccount = new BufferedReader(frInModifyAccount);
-					ArrayList<String[]> storeAccountInfo;
-					storeAccountInfo = new ArrayList<String[]>();
-					if ("學生".equals(selectedCharacter))
-						tableMInModifyAccount = new DefaultTableModel(null,
-								new String[] { "帳號", "密碼", "帳戶姓名", "入學年份" });
-					else
-						tableMInModifyAccount = new DefaultTableModel(null, new String[] { "帳號", "密碼", "帳戶姓名" });
-					try {
-						while (brInModifyAccount.ready()) {
-							String[] accountInfo = brInModifyAccount.readLine().split(" ");
-							storeAccountInfo.add(accountInfo);
-						}
-						 brInModifyAccount.close();
-						frInModifyAccount.close();
-					} catch (IOException e3) {
-					}
-					if (tableMInModifyAccount != null) {
-						for (int i = 0; i < storeAccountInfo.size(); i++) {
-							tableMInModifyAccount.addRow(storeAccountInfo.get(i));
-						}
-						listTableInModifyAccount = new JTable(tableMInModifyAccount);
-						JScrollPane accountPaneInModifyAccount = new JScrollPane(listTableInModifyAccount);
-						accountPaneInModifyAccount.setBounds(25, 20, 850, 300);
-						accountPaneInModifyAccount.setVisible(true);
-						actionPanelInAccountManage.add(accountPaneInModifyAccount);
-						actionPanelInAccountManage.add(modifySureBtn);
-						modifySureBtn.setVisible(true);
-						modifySureBtn.addActionListener(new ActionListener() {
-							@Override
-							public void actionPerformed(ActionEvent e) {
-								try {
-									listTableInModifyAccount.repaint();
-									if(LMSapp.userAccount instanceof Manager)
-										((Manager)LMSapp.userAccount).modifyAccount(tableMInModifyAccount, selectedCharacter);
-								} catch (IOException e1) {
-									e1.printStackTrace();
-								}
-							}
 
-						});
-					}
+					JLabel enterLabel = new JLabel("請輸入欲修改帳號:");
+					enterLabel.setBounds(300, 36, 118, 23);
+					actionPanel.add(enterLabel);
+					JTextField accountTextField = new JTextField();
+					accountTextField.setBounds(410, 33, 231, 29);
+					accountTextField.setColumns(9);
+					actionPanel.add(accountTextField);
+					JButton startManageBtn = new JButton("開始");
+					startManageBtn.setBounds(434, 75, 170, 40);
+					actionPanel.add(startManageBtn);
+
+					JLabel modifynameLabel = new JLabel("帳戶姓名:");
+					JTextField modifynameTextField = new JTextField();
+					JLabel modifyPasswordLabel = new JLabel("新增密碼:");
+					JTextField modifyPasswordTextField = new JTextField();
+					JLabel modifyYearLabel = new JLabel("入學年度:");
+					JTextField modifyYearTextField = new JTextField();
+					JButton sureManageBtn = new JButton("確認");
+
+					startManageBtn.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent arg0) {
+							modifynameLabel.setBounds(340, 125, 102, 23);
+							modifynameTextField.setBounds(410, 125, 231, 29);
+							modifyPasswordLabel.setBounds(340, 179, 102, 23);
+							modifyPasswordTextField.setColumns(16);
+							modifyPasswordTextField.setBounds(410, 179, 231, 29);
+							modifyYearLabel.setBounds(340, 222, 111, 23);
+							modifyYearTextField.setColumns(16);
+							modifyYearTextField.setBounds(410, 222, 231, 29);
+							sureManageBtn.setBounds(410, 265, 231, 29);
+
+							actionPanel.add(modifynameLabel);
+							actionPanel.add(modifynameTextField);
+							actionPanel.add(modifyPasswordLabel);
+							actionPanel.add(modifyPasswordTextField);
+							actionPanel.add(modifyYearLabel);
+							actionPanel.add(modifyYearTextField);
+							actionPanel.add(sureManageBtn);
+							actionPanel.repaint();
+
+							if ("學生".equals(selectedCharacter)) {
+								modifyYearLabel.setVisible(true);
+								modifyYearTextField.setVisible(true);
+							} else {
+								modifyYearLabel.setVisible(false);
+								modifyYearTextField.setVisible(false);
+							}
+							
+							sureManageBtn.addActionListener(new ActionListener() {
+								@Override
+								public void actionPerformed(ActionEvent arg0) {
+									if (LMSapp.userAccount instanceof Manager) {
+										try {
+											String account = accountTextField.getText();
+											String name = modifynameTextField.getText();
+											String password = modifyPasswordTextField.getText();
+											String year = modifyYearTextField.getText();
+											if(name==""||password==""||year=="")
+												return;
+											accountTextField.setText("");
+											modifynameTextField.setText("");
+											modifyPasswordTextField.setText("");
+											modifyYearTextField.setText("");
+											actionPanel.remove(modifynameLabel);
+											actionPanel.remove(modifynameTextField);
+											actionPanel.remove(modifyPasswordLabel);
+											actionPanel.remove(modifyPasswordTextField);
+											actionPanel.remove(modifyYearLabel);
+											actionPanel.remove(modifyYearTextField);
+											actionPanel.remove(sureManageBtn);
+											actionPanel.repaint();
+											repaint();
+											LMSapp.frame.repaint();
+											switch (selectedCharacter) {
+											case "學生":
+												((Manager) LMSapp.userAccount).modifyStudentAccount(account, password,
+														name, year);
+												break;
+											case "教授":
+												((Manager)LMSapp.userAccount).modifyProfessorAccount(account,password,name);
+												break;
+											case "管理員":
+												 ((Manager)LMSapp.userAccount).modifyManagerAccount(account,password,name);
+												break;
+											}
+
+										} catch (IOException e) {
+											e.printStackTrace();
+										}
+
+									}
+								}
+							});
+
+						}
+					});
+
+					break;
 
 				}
 
 			}
 		});
-
 
 	}
 

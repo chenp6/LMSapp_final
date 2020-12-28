@@ -15,8 +15,8 @@ public class ManagerMenu extends JPanel {
 	 * Create the panel.
 	 */
 	public ManagerMenu() {
-		Font menuFont = new Font("Btn", Font.BOLD & Font.CENTER_BASELINE, 23);
-		Font menuItemFont = new Font("menuItem", Font.BOLD & Font.CENTER_BASELINE, 18);
+		Font menuFont = new Font("Btn", Font.BOLD , 23);
+		Font menuItemFont = new Font("menuItem", Font.BOLD, 18);
 
 		setBounds(0,0,916,47);
 		JMenuBar menuBar = new JMenuBar();
