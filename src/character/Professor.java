@@ -1,4 +1,5 @@
 package character;
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
@@ -45,6 +46,32 @@ public class Professor extends Account {
 		writer.write(writeText);
 		writer.close();
 		return correctPw;
+	}
+	public void  saveScore(JTable table, String selectedSemester, String selectedCourseNum) throws IOException {
+		String updateText  = updateStudentScoreInCourse(table,selectedSemester,selectedCourseNum);
+		FileOutputStream writerStream = new FileOutputStream("data/課程資料.txt");
+		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(writerStream, "UTF-8"));
+		writer.write(updateText);
+		writer.close();
+	}
+	private String updateStudentScoreInCourse(JTable table,String selectedSemester,String selectedCourseNum) throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader("data/課程資料.txt"));
+		StringBuilder updateText = new StringBuilder();
+		while(br.ready()) {
+			String courseInfoLine = br.readLine();
+			String[] courseInfo = courseInfoLine.split(" ");
+			for(int index = 0;index<courseInfo.length-1;index++)
+				updateText.append(courseInfo[index]+" ");
+			if(selectedSemester.equals(courseInfo[0]) && selectedCourseNum.equals(courseInfo[1])) {
+				updateText.append((String)table.getValueAt(0, 2));
+				for(int i=1;i<table.getRowCount();i++)
+					updateText.append(","+(String)table.getValueAt(i, 2));
+			}
+			else
+				updateText.append(courseInfo[courseInfo.length-1]);
+			updateText.append("\n");
+		}
+		return updateText.toString();
 	}
 
 }
