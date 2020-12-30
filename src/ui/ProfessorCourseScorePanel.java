@@ -21,6 +21,7 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 import LMSapp.*;
 import character.Manager;
+import character.Professor;
 
 public class ProfessorCourseScorePanel extends JPanel {
 
@@ -35,10 +36,9 @@ public class ProfessorCourseScorePanel extends JPanel {
         semesterLabelInManageCourseScore.setHorizontalAlignment(SwingConstants.CENTER);
         semesterLabelInManageCourseScore.setBounds(322,100, 71, 23);
         add(semesterLabelInManageCourseScore);
-        JComboBox semesterComboInManageCourseScore = new JComboBox(
-                new Object[] { "請選擇", "107-2", "108-1", "108-2", "109-1" });
-        semesterComboInManageCourseScore.setBounds(425, 100, 173, 34);
-        add(semesterComboInManageCourseScore);
+        JComboBox semesterCombo = new JComboBox(new Object[] { "請選擇", "107-2", "108-1", "108-2", "109-1" });
+        semesterCombo.setBounds(425, 100, 173, 34);
+        add(semesterCombo);
         JLabel courseLabelInManageCourseScore = new JLabel("課程名稱:");
         courseLabelInManageCourseScore.setHorizontalAlignment(SwingConstants.CENTER);
         courseLabelInManageCourseScore .setBounds(255, 156, 155, 23);
@@ -46,14 +46,11 @@ public class ProfessorCourseScorePanel extends JPanel {
         JComboBox courseComboInManageCourseScore =  new JComboBox(new Object[] {"請選擇"});
         courseComboInManageCourseScore.setBounds(425, 150, 250, 34);
         add(courseComboInManageCourseScore);
-        
-        
-        //這邊列出的課程應該只有該教授該學期有授課的成績，原本我是會show出該學期所有課程
-        semesterComboInManageCourseScore.addItemListener(new ItemListener() {
+        semesterCombo.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if(e.getStateChange() == ItemEvent.SELECTED) {
-                    String selectedSemester = (String)semesterComboInManageCourseScore.getSelectedItem();
+                    String selectedSemester = (String)semesterCombo.getSelectedItem();
                     Object[] courseArr = showSemesterCourse(selectedSemester);
                     courseComboInManageCourseScore.removeAllItems();
                     for(int i=0;i<courseArr.length;i++)
@@ -74,7 +71,7 @@ public class ProfessorCourseScorePanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 try {
                     cleanTable(tableMInCourseScore);
-                    String selectedSemester = (String)semesterComboInManageCourseScore.getSelectedItem();
+                    String selectedSemester = (String)semesterCombo.getSelectedItem();
                     String selectedCourse[] = ((String)courseComboInManageCourseScore.getSelectedItem()).split(" ");
 
                     BufferedReader br = new BufferedReader(new FileReader("data/課程資料.txt"));
@@ -87,11 +84,9 @@ public class ProfessorCourseScorePanel extends JPanel {
                                     return false;
                             }// 表格不允許被編輯
                         };
+                        //if(courseInfoInCourseScore[4].equals(LMSapp.userAccount.name))
                         String[] courseInfoInCourseScore = br.readLine().split(" ");
-                        
-                        
-                        if(selectedSemester.equals(courseInfoInCourseScore[0])&&
-                                selectedCourse[0].equals(courseInfoInCourseScore[1])) {
+                        if(selectedSemester.equals(courseInfoInCourseScore[0]) && selectedCourse[0].equals(courseInfoInCourseScore[1])) {
                             Object[] studentAccount = courseInfoInCourseScore[7].split(",");
                             Object[] studentName = courseInfoInCourseScore[6].split(",");
                             Object[] studentScore = courseInfoInCourseScore[8].split(",");
@@ -99,37 +94,35 @@ public class ProfessorCourseScorePanel extends JPanel {
                                 tableMInCourseScore.addRow(new Object[] {studentAccount[i],studentName[i],studentScore[i]});
                             JScrollPane accountPaneInCourseScore = new JScrollPane(tableInCourseScore);
                             accountPaneInCourseScore.setBounds(25, 250, 850, 300);
-                            accountPaneInCourseScore .setVisible(false);
-                            getThisJPanel().add(accountPaneInCourseScore);
-                            accountPaneInCourseScore .setVisible(true);
+                            getThisPanel().add(accountPaneInCourseScore);
                             JButton saveChangeBtnInCourseScore = new JButton("儲存變更");
-                            saveChangeBtnInCourseScore.setVisible(false);
                             saveChangeBtnInCourseScore.setBounds(400, 570, 100, 34);
-                            getThisJPanel().add(saveChangeBtnInCourseScore);
-                            getThisJPanel().repaint();
+                            getThisPanel().add(saveChangeBtnInCourseScore);
+                            getThisPanel().repaint();
                             saveChangeBtnInCourseScore.addActionListener(new ActionListener() {
                                 @Override
                                 public void actionPerformed(ActionEvent arg0) {
                                     try {
-                                        if(LMSapp.userAccount instanceof Manager)
-                                            ((Manager)LMSapp.userAccount).saveScore(tableInCourseScore,selectedSemester,selectedCourse[0]);
-                                    } catch (IOException e) {}
+                                        if(LMSapp.userAccount instanceof Professor)
+                                            ((Professor)LMSapp.userAccount).saveScore(tableInCourseScore,selectedSemester,selectedCourse[0]);
+                                    } catch (IOException ignored) {}
                                 }
 
                             });
 
                             return;
                         }
-
                     }
-                } catch (FileNotFoundException e1) {} catch (IOException e1) {}
+
+
+                } catch (IOException ignored) {}
 
             }
         });
     }
 
     static Object[] showSemesterCourse(String selectedSemester) {
-        ArrayList<Object> courseListInAddStudent = new ArrayList<Object>();
+        ArrayList<Object> courseListInAddStudent = new ArrayList<>();
         courseListInAddStudent.add("請選擇");
         FileReader frInAddStudent = null;
         try {
@@ -139,16 +132,17 @@ public class ProfessorCourseScorePanel extends JPanel {
         try {
             while (brInAddStudent.ready()) {
                 String[] courseInfoList = brInAddStudent.readLine().split(" ");
-                if(selectedSemester.equals(courseInfoList[0]))
+                if(selectedSemester.equals(courseInfoList[0])&&courseInfoList[4].equals(LMSapp.userAccount.name))
                     courseListInAddStudent.add(courseInfoList[1]+" "+courseInfoList[2]);
             }
             brInAddStudent.close();
         } catch (IOException e1) {}
         return courseListInAddStudent.toArray();
     }
-	public JPanel getThisJPanel() {
-		return this;
-	}
+
+    public JPanel getThisPanel() {
+        return this;
+    }
     static void cleanTable(DefaultTableModel tableM) {
         while (tableM.getRowCount() > 0)
             tableM.removeRow(0);
