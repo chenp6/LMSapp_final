@@ -78,7 +78,7 @@ public class ManageAccountPanel extends JPanel {
 					JTextField nameTextField = new JTextField();
 					JLabel newAccountLabel = new JLabel("新增帳號:");
 					JTextField newAccountTextField = new JTextField();
-					JLabel hint = new JLabel("注意:學生帳號為9碼，教授為5碼，管理員為4碼");
+					JLabel hint = new JLabel("注意:學生帳號為學號，教授、管理員為員編");
 					JLabel newPasswordLabel = new JLabel("新增密碼:");
 					JTextField newPasswordTextFile = new JTextField();
 					JLabel yearLabel = new JLabel("入學年度:");
@@ -117,29 +117,17 @@ public class ManageAccountPanel extends JPanel {
 					}
 					sureAddInManageAccount.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							if (("學生".equals(selectedCharacter) && newAccountTextField.getText().length() != 9)
-									|| ("教授".equals(selectedCharacter) && newAccountTextField.getText().length() != 5)
-									|| ("管理員".equals(selectedCharacter)
-											&& newAccountTextField.getText().length() != 4)) {
-								JOptionPane.showMessageDialog(new JTextField(), "格式不符，請重新填寫", "新增帳戶失敗",
-										JOptionPane.PLAIN_MESSAGE);
-								newAccountTextField.setText("");
-								newPasswordTextFile.setText("");
-								nameTextField.setText("");
-								yearTextField.setText("");
-								return;
-							}
-							String selectedCharacter = (String) characterComboInManageAccount.getSelectedItem();
-							StringBuilder newInfo = new StringBuilder();
-							newInfo.append(newAccountTextField.getText() + " ");
-							newInfo.append(newPasswordTextFile.getText() + " ");
-							newInfo.append(nameTextField.getText() + " ");
-							try {
-								if ("學生".equals(selectedCharacter))
-									newInfo.append(yearTextField.getText() + " ");
-								newInfo.append("\n");
-								if (LMSapp.userAccount instanceof Manager)
-									((Manager) LMSapp.userAccount).addNewAccount(selectedCharacter, newInfo.toString());
+							String selectedCharacter = (String) characterComboInManageAccount.getSelectedItem();						
+							String accountText = newAccountTextField.getText();
+							String passwordText = newPasswordTextFile.getText();
+							String nameText = nameTextField.getText();
+							String year = "";
+							if ("學生".equals(selectedCharacter))
+									year = yearTextField.getText();
+							try {						
+								if (LMSapp.userAccount instanceof Manager) 
+									((Manager) LMSapp.userAccount).addNewAccount(selectedCharacter,nameText, accountText,passwordText,year);
+								
 							} catch (IOException e1) {
 								e1.printStackTrace();
 							}
@@ -224,8 +212,14 @@ public class ManageAccountPanel extends JPanel {
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							try {
+								int row = listTableInDeleteAccount.getRowCount();
+								int col = listTableInDeleteAccount.getColumnCount();
+								Object[][] tableData = new Object[row][col];
+								for(int i=0;i<row;i++)
+									for(int j=0;j<col;j++)
+										tableData[i][j] = listTableInDeleteAccount.getValueAt(i, j);
 								if (LMSapp.userAccount instanceof Manager)
-									((Manager) LMSapp.userAccount).deleteAccount(listTableInDeleteAccount,
+									((Manager) LMSapp.userAccount).deleteAccount(tableData,
 											selectedCharacter);
 								for (int i = 0; i < listTableInDeleteAccount.getRowCount(); i++) {
 									if ((Boolean) listTableInDeleteAccount.getValueAt(i, 0) == true) {

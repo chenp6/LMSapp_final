@@ -73,22 +73,22 @@ public class ManageCourseInfoPanel extends JPanel {
 				switch (selectedAction) {
 				case "新增":
 					JLabel numLabelInManageCourseInfo = new JLabel("課程代碼:");
-					JTextField numTextFieldInManageCourseInfo = new JTextField();
+					JTextField courseNum = new JTextField();
 					numLabelInManageCourseInfo.setBounds(310, 20, 102, 23);
-					numTextFieldInManageCourseInfo.setBounds(380, 20, 231, 29);
+					courseNum.setBounds(380, 20, 231, 29);
 					JLabel nameLabelInManageCourseInfo = new JLabel("課程名稱:");
-					JTextField nameTextFieldInManageCourseInfo = new JTextField();
+					JTextField courseName = new JTextField();
 					nameLabelInManageCourseInfo.setBounds(310, 70, 102, 23);
-					nameTextFieldInManageCourseInfo.setBounds(380, 70, 231, 29);
+					courseName.setBounds(380, 70, 231, 29);
 					JLabel newCreditLabel = new JLabel("學分:");
-					JTextField newCreditTextField = new JTextField();
+					JTextField credit = new JTextField();
 					newCreditLabel.setBounds(310, 120, 102, 23);
-					newCreditTextField.setBounds(380, 120, 231, 29);
-					newCreditTextField.setColumns(3);
+					credit.setBounds(380, 120, 231, 29);
+					credit.setColumns(3);
 					JLabel newProfessorLabelInManageCourseInfo = new JLabel("授課教授:");
-					JTextField newProfessorTextFileInManageCourseInfo = new JTextField();
+					JTextField professor = new JTextField();
 					newProfessorLabelInManageCourseInfo.setBounds(310, 170, 102, 23);
-					newProfessorTextFileInManageCourseInfo.setBounds(380, 170, 231, 29);
+					professor.setBounds(380, 170, 231, 29);
 					ButtonGroup typeGroup = new ButtonGroup();
 					JLabel typeLabel = new JLabel("類型:");
 					JRadioButton typeCom = new JRadioButton("必修");
@@ -101,13 +101,13 @@ public class ManageCourseInfoPanel extends JPanel {
 					JButton sureAddInManageCourseInfo = new JButton("確認");
 					sureAddInManageCourseInfo.setBounds(360, 270, 231, 29);
 					actionPanelInManageCourseInfo.add(numLabelInManageCourseInfo);
-					actionPanelInManageCourseInfo.add(numTextFieldInManageCourseInfo);
+					actionPanelInManageCourseInfo.add(courseNum);
 					actionPanelInManageCourseInfo.add(nameLabelInManageCourseInfo);
-					actionPanelInManageCourseInfo.add(nameTextFieldInManageCourseInfo);
+					actionPanelInManageCourseInfo.add(courseName);
 					actionPanelInManageCourseInfo.add(newCreditLabel);
-					actionPanelInManageCourseInfo.add(newCreditTextField);
+					actionPanelInManageCourseInfo.add(credit);
 					actionPanelInManageCourseInfo.add(newProfessorLabelInManageCourseInfo);
-					actionPanelInManageCourseInfo.add(newProfessorTextFileInManageCourseInfo);
+					actionPanelInManageCourseInfo.add(professor);
 					actionPanelInManageCourseInfo.add(typeCom);
 					actionPanelInManageCourseInfo.add(typeElect);
 					actionPanelInManageCourseInfo.add(typeLabel);
@@ -117,27 +117,18 @@ public class ManageCourseInfoPanel extends JPanel {
 					sureAddInManageCourseInfo.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
 							String selectedSemester = (String) semesterComboInManageCourseInfo.getSelectedItem();
-							StringBuilder newInfo = new StringBuilder();
-							newInfo.append(selectedSemester + " ");
-							newInfo.append(numTextFieldInManageCourseInfo.getText() + " ");
-							newInfo.append(nameTextFieldInManageCourseInfo.getText() + " ");
-							newInfo.append(newCreditTextField.getText() + " ");
-							newInfo.append(newProfessorTextFileInManageCourseInfo.getText() + " ");
-							if (typeElect.isSelected())
-								newInfo.append("選修 ");
-							else
-								newInfo.append("必修 ");
 							try {
-								newInfo.append("未設定 未設定 未設定\n");
 								if(LMSapp.userAccount instanceof Manager)
-									((Manager)LMSapp.userAccount).addNewCourse(newInfo.toString());
+									((Manager)LMSapp.userAccount).addNewCourse(selectedSemester
+											,courseNum.getText(),courseName.getText(),credit.getText()
+											,professor.getText(),typeElect.isSelected());
 							} catch (IOException e1) {
 								e1.printStackTrace();
 							}
-							numTextFieldInManageCourseInfo.setText("");
-							nameTextFieldInManageCourseInfo.setText("");
-							newCreditTextField.setText("");
-							newProfessorTextFileInManageCourseInfo.setText("");
+							courseNum.setText("");
+							courseName.setText("");
+							credit.setText("");
+							professor.setText("");
 							typeElect.setSelected(false);
 							typeCom.setSelected(false);
 						}
@@ -214,8 +205,11 @@ public class ManageCourseInfoPanel extends JPanel {
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							try {
-								if(LMSapp.userAccount instanceof Manager)
-									((Manager)LMSapp.userAccount).deleteCourse(listTableInDeleteCourse,originalInDeleteCourse,selectedSemester);
+
+								if(LMSapp.userAccount instanceof Manager) {
+									Object[][] tableData = getTableAsArray(listTableInDeleteCourse);
+									((Manager)LMSapp.userAccount).deleteCourse(tableData,originalInDeleteCourse,selectedSemester);
+								}
 								for (int i = 0; i < listTableInDeleteCourse.getRowCount(); i++) {
 									if ((Boolean) listTableInDeleteCourse.getValueAt(i, 0) == true) {
 										tableMInDeleteCourse.removeRow(i);
@@ -305,6 +299,17 @@ public class ManageCourseInfoPanel extends JPanel {
 				}
 			}
 		});
+	}
+	
+	
+	public static Object[][] getTableAsArray(JTable table) {
+		int row = table.getRowCount();
+		int col = table.getColumnCount();
+		Object[][] tableData = new Object[row][col];
+		for(int i=0;i<row; i++)
+			for(int j=0;j<col;j++)
+				tableData[i][j] = table.getValueAt(i,j);
+		return tableData;
 	}
 
 }

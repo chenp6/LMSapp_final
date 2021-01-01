@@ -11,6 +11,7 @@ import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -62,8 +63,12 @@ public class LoginPanel extends JPanel {
 					if (login.character != 'e') {
 						LMSapp.userAccount = login;
 						LMSapp.frame.changePage(new HomePagePanel());
-					} else
+					} else {
+						account.setText("");
+						password.setText("");
+						JOptionPane.showMessageDialog(new JTextField(),"登入失敗，請重新輸入","登入失敗",JOptionPane.ERROR_MESSAGE);
 						return;
+					}
 				} catch (IOException e1) {
 				}
 			}
@@ -101,7 +106,6 @@ public class LoginPanel extends JPanel {
 			while (br.ready()) {
 				String[] info = br.readLine().split(" ");
 				if (info[0].equals(account) && info[1].equals(password)) {
-
 					switch (character) {
 					case 's':// 學生
 						user = new Student(info[0], info[1], info[2],info[3],character);

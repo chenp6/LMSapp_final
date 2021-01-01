@@ -99,7 +99,7 @@ public class ManageCourseStudentPanel extends JPanel {
 							String selectedCourseNum = selectedCourseInfo[0];
 							try {
 								if(LMSapp.userAccount instanceof Manager) {
-									((Manager)LMSapp.userAccount).addNewStudent(accountToCourse, selectedSemester, selectedCourseNum);
+									((Manager)LMSapp.userAccount).addNewCourseStudent(accountToCourse, selectedSemester, selectedCourseNum);
 								}
 							} catch (IOException e1) {
 							}
@@ -176,8 +176,11 @@ public class ManageCourseStudentPanel extends JPanel {
 							public void actionPerformed(ActionEvent e) {
 								listTableInDeleteStudent.repaint();
 								try {
-									if(LMSapp.userAccount instanceof Manager)
-										((Manager)LMSapp.userAccount).deleteCourseStudent(listTableInDeleteStudent, accountToCourse, selectedSemester);
+									if(LMSapp.userAccount instanceof Manager) {
+										Object[][] tableData = getTableAsArray(listTableInDeleteStudent); 
+										((Manager)LMSapp.userAccount).deleteCourseStudent(tableData, accountToCourse, selectedSemester);
+									
+									}
 									for (int i = 0; i < listTableInDeleteStudent.getRowCount(); i++) {
 										if ((Boolean) listTableInDeleteStudent.getValueAt(i, 0) == true) {
 											tableMInDeleteStudent.removeRow(i);
@@ -215,4 +218,13 @@ public class ManageCourseStudentPanel extends JPanel {
 		return courseListInAddStudent.toArray();
 	}
 	
+	public static Object[][] getTableAsArray(JTable table) {
+		int row = table.getRowCount();
+		int col = table.getColumnCount();
+		Object[][] tableData = new Object[row][col];
+		for(int i=0;i<row; i++)
+			for(int j=0;j<col;j++)
+				tableData[i][j] = table.getValueAt(i,j);
+		return tableData;
+	}
 }

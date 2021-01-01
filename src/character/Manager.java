@@ -38,6 +38,8 @@ public class Manager extends Account {
 	@Override
 	public boolean changePassword(String oldPassword, String newPassword) throws IOException {
 		boolean correctPw = false;// 輸入的舊密碼是否正確，是否為本人
+		if(newPassword.contains(" "))
+			return correctPw;
 		FileReader fr = null;
 		fr = new FileReader("data/管理員帳戶資料.txt");
 		BufferedReader br = new BufferedReader(fr);
@@ -70,23 +72,36 @@ public class Manager extends Account {
 	}
 
 	// 新增帳戶
-	public void addNewAccount(String selectedCharacter, String writeText) throws IOException {
-		String file = "";
-		switch (selectedCharacter) {
-		case "學生":
-			file = "data/學生帳戶資料.txt";
-			break;
-		case "教授":
-			file = "data/教授帳戶資料.txt";
-			break;
-		case "管理員":
-			file = "data/管理員帳戶資料.txt";
-			break;
+	public boolean addNewAccount(String selectedCharacter, String name, String account, String password, String year)
+			throws IOException {
+		int accountLen = account.length();
+		if (("學生".equals(selectedCharacter) && accountLen != 9) || ("教授".equals(selectedCharacter) && accountLen != 5)
+				|| ("管理員".equals(selectedCharacter) && accountLen != 4)) {
+			JOptionPane.showMessageDialog(new JTextField(), "格式不符，請重新填寫", "新增帳戶失敗", JOptionPane.ERROR_MESSAGE);
+			return false;
 		}
-		String updateString = addAccountToAccountList(selectedCharacter, writeText, file);
+		if(name.equals("")||password.equals("")||name.contains(" ")||password.contains(" ")) {
+			JOptionPane.showMessageDialog(new JTextField(), "資料不可為空，請重新填寫", "新增帳戶失敗", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+			
+		StringBuilder writeText = new StringBuilder();
+		writeText.append(account + " ");
+		writeText.append(password + " ");
+		writeText.append(name + " ");
+		if ("學生".equals(selectedCharacter)) {
+			if(year.equals("")||year.equals(" "))
+				return false;
+			writeText.append(year + " ");
+		}
+		writeText.append("\n");
+		String file = "data/" + selectedCharacter + "帳戶資料.txt";
+		String updateString = addAccountToAccountList(selectedCharacter, writeText.toString(), file);
 		FileWriter writer = new FileWriter(file);
 		writer.write(updateString);
 		writer.close();
+		JOptionPane.showMessageDialog(new JTextField(), "帳戶成功", "新增帳戶", JOptionPane.PLAIN_MESSAGE);
+		return true;
 	}
 
 	private String addAccountToAccountList(String selectedCharacter, String writeText, String file) throws IOException {
@@ -108,33 +123,35 @@ public class Manager extends Account {
 
 	// 刪除帳戶
 
-	public void deleteAccount(JTable table, String selectedCharacter) throws IOException {
+	public boolean deleteAccount(Object[][] tableData, String selectedCharacter) throws IOException {
 		String file = "data/" + selectedCharacter + "帳戶資料.txt";
 		StringBuilder writeText = new StringBuilder();
 		ArrayList<Integer> removeRow = new ArrayList<Integer>();
-		for (int i = 0; i < table.getRowCount(); i++) {
-			if ((Boolean) table.getValueAt(i, 0) == true) {
+		for (int i = 0; i < tableData.length; i++) {
+			if ((Boolean) tableData[i][0] == true) {
 				removeRow.add(i);
 			}
 		}
-		String[] tableArr = deleteAccountInAccountList(table, removeRow);
+		String[] tableArr = deleteAccountInAccountList(tableData, removeRow);
 		for (String str : tableArr)
 			writeText.append(str);
 		FileWriter writer = new FileWriter(file);
 		writer.write(writeText.toString());
 		writer.close();
+		JOptionPane.showMessageDialog(new JTextField(), "帳戶刪除成功", "刪除帳戶", JOptionPane.PLAIN_MESSAGE);
+		return true;
 	}
 
-	private String[] deleteAccountInAccountList(JTable table, ArrayList<Integer> ignoreRow) {
-		String[] tempArr = new String[table.getRowCount() - ignoreRow.size()];
+	private String[] deleteAccountInAccountList(Object[][] tableData, ArrayList<Integer> ignoreRow) {
+		String[] tempArr = new String[tableData.length - ignoreRow.size()];
 		int index = 0;
-		for (int row = 0; row < table.getRowCount(); row++) {
+		for (int row = 0; row < tableData.length; row++) {
 			if (ignoreRow.indexOf(row) != -1)
 				continue;
 			StringBuilder temp = new StringBuilder();
-			for (int col = 1; col < table.getColumnCount() - 1; col++)
-				temp.append(table.getValueAt(row, col) + " ");
-			temp.append(table.getValueAt(row, table.getColumnCount() - 1) + "\n");
+			for (int col = 1; col < tableData[row].length - 1; col++)
+				temp.append(tableData[row][col] + " ");
+			temp.append(tableData[row][tableData[row].length - 1] + "\n");
 			tempArr[index] = temp.toString();
 			index++;
 		}
@@ -143,11 +160,20 @@ public class Manager extends Account {
 	}
 
 	// 修改學生帳戶
-	public void modifyStudentAccount(String account, String password, String name, String year) throws IOException {
+	public boolean modifyStudentAccount(String account, String password, String name, String year) throws IOException {
+		String tempName = name.replace(" ","");
+		String tempPassword = password.replace(" ","");
+		String tempYear = year.replace(" ", "");
+		if(tempName.equals("")||tempPassword.equals("")||tempYear.equals("")) {
+				JOptionPane.showMessageDialog(new JTextField(), "資料不可為空，請重新填寫", "更改帳戶", JOptionPane.ERROR_MESSAGE);
+				return false;
+		}
 		String updateAccountText = getModifiedStudentData(account, password, name, year);
 		FileWriter writerAccount = new FileWriter("data/學生帳戶資料.txt");
 		writerAccount.write(updateAccountText);
 		writerAccount.close();
+		JOptionPane.showMessageDialog(new JTextField(), "更改帳戶成功", "更改帳戶", JOptionPane.PLAIN_MESSAGE);
+		return true;
 	}
 
 	private String getModifiedStudentData(String account, String password, String name, String year)
@@ -181,13 +207,13 @@ public class Manager extends Account {
 
 			List<String> accountList = (List<String>) Arrays.asList(courseInfo[7].split(","));
 			int studentIndex = accountList.indexOf(account);
-				if (studentIndex != -1) {
-					String[] nameList = courseInfo[6].split(",");
-					nameList[studentIndex] = name;
-					String updateNameList = String.join(",", nameList);
-					courseInfo[6] = updateNameList;
-					courseStr = String.join(" ", courseInfo);
-				}
+			if (studentIndex != -1) {
+				String[] nameList = courseInfo[6].split(",");
+				nameList[studentIndex] = name;
+				String updateNameList = String.join(",", nameList);
+				courseInfo[6] = updateNameList;
+				courseStr = String.join(" ", courseInfo);
+			}
 			updateStr.append(courseStr + "\n");
 		}
 		br.close();
@@ -196,17 +222,24 @@ public class Manager extends Account {
 		writer.write(updateStr.toString());
 		writer.close();
 	}
-	
-	
-	//修改教授帳戶
-	public void modifyProfessorAccount(String account, String password, String name) throws IOException {
+
+	// 修改教授帳戶
+	public boolean modifyProfessorAccount(String account, String password, String name) throws IOException {
+		String tempName = name.replace(" ","");
+		String tempPassword = password.replace(" ","");
+		if(tempName.equals("")||tempPassword.equals("")) {
+				JOptionPane.showMessageDialog(new JTextField(), "資料不可為空，請重新填寫", "更改帳戶", JOptionPane.ERROR_MESSAGE);
+				return false;
+		}
 		String updateAccountText = getModifiedProfessorData(account, password, name);
 		FileWriter writerAccount = new FileWriter("data/教授帳戶資料.txt");
 		writerAccount.write(updateAccountText);
 		writerAccount.close();
+		JOptionPane.showMessageDialog(new JTextField(), "更改帳戶成功", "更改帳戶", JOptionPane.PLAIN_MESSAGE);
+		return true;
 	}
-	private String getModifiedProfessorData(String account, String password, String name)
-			throws IOException {
+
+	private String getModifiedProfessorData(String account, String password, String name) throws IOException {
 		FileReader fr = new FileReader("data/教授帳戶資料.txt");
 		BufferedReader br = new BufferedReader(fr);
 		StringBuilder strBuild = new StringBuilder();
@@ -215,7 +248,7 @@ public class Manager extends Account {
 			String[] accountInfo = accountList.split(" ");
 			if (account.equals(accountInfo[0])) {
 				if (!(name.equals(accountInfo[2])))
-					updateCourseProfessorName(accountInfo[2],name);
+					updateCourseProfessorName(accountInfo[2], name);
 				accountInfo[1] = password;
 				accountInfo[2] = name;
 				accountList = String.join(" ", accountInfo);
@@ -224,14 +257,15 @@ public class Manager extends Account {
 		}
 		return strBuild.toString();
 	}
-	private void updateCourseProfessorName(String oldName,String newName) throws IOException {
+
+	private void updateCourseProfessorName(String oldName, String newName) throws IOException {
 		StringBuilder updateStr = new StringBuilder();
 		FileReader fr = new FileReader("data/課程資料.txt");
 		BufferedReader br = new BufferedReader(fr);
 		while (br.ready()) {
 			String courseStr = br.readLine();
 			String[] courseInfo = courseStr.split(" ");
-			if(oldName.equals(courseInfo[4])) {
+			if (oldName.equals(courseInfo[4])) {
 				courseInfo[4] = newName;
 				courseStr = String.join(" ", courseInfo);
 			}
@@ -243,17 +277,24 @@ public class Manager extends Account {
 		writer.write(updateStr.toString());
 		writer.close();
 	}
-	
-	
-	//修改管理員帳戶
-	public void modifyManagerAccount(String account, String password, String name) throws IOException {
+
+	// 修改管理員帳戶
+	public boolean modifyManagerAccount(String account, String password, String name) throws IOException {
+		String tempName = name.replace(" ","");
+		String tempPassword = password.replace(" ","");
+		if(tempName.equals("")||tempPassword.equals("")) {
+				JOptionPane.showMessageDialog(new JTextField(), "資料不可為空，請重新填寫", "更改帳戶", JOptionPane.ERROR_MESSAGE);
+				return false;
+		}
 		String updateAccountText = getModifiedManagerData(account, password, name);
 		FileWriter writerAccount = new FileWriter("data/管理員帳戶資料.txt");
 		writerAccount.write(updateAccountText);
 		writerAccount.close();
+		JOptionPane.showMessageDialog(new JTextField(), "更改帳戶成功", "更改帳戶", JOptionPane.PLAIN_MESSAGE);
+		return true;
 	}
-	private String getModifiedManagerData(String account, String password, String name)
-			throws IOException {
+
+	private String getModifiedManagerData(String account, String password, String name) throws IOException {
 		FileReader fr = new FileReader("data/管理員帳戶資料.txt");
 		BufferedReader br = new BufferedReader(fr);
 		StringBuilder strBuild = new StringBuilder();
@@ -272,14 +313,44 @@ public class Manager extends Account {
 	// ===================課程管理===================
 
 	// 新增課程
-	public void addNewCourse(String writeText) throws IOException {
-		String updateText = addCourseToCourseList(writeText);
+	public boolean addNewCourse(String semester,String courseNum,String courseName,String credit,String professor,boolean type) throws IOException {
+		 String tempNum = courseNum.replace(" ", "");
+		 String tempName = courseName.replace(" ", "");
+		 String tempProfessor = professor.replace(" ", "");
+		 String tempCredit = credit.replace(" ", "");
+		if(tempNum.equals("")||tempName.equals("")||tempCredit.equals("")||
+				tempProfessor.equals("")) {
+				JOptionPane.showMessageDialog(new JTextField(), "資料不可為空，請重新填寫", "新增課程", JOptionPane.PLAIN_MESSAGE);			
+				return false;
+		}
+		
+		StringBuilder newInfo = new StringBuilder();
+		newInfo.append(semester + " ");
+		newInfo.append(courseNum+ " ");
+		newInfo.append(courseName + " ");
+		newInfo.append(credit + " ");
+		newInfo.append(professor + " ");
+		if (type)
+			newInfo.append("選修 ");
+		else
+			newInfo.append("必修 ");
+		newInfo.append("未設定 未設定 未設定\n");
+		
+		String writeText = newInfo.toString();
+		String updateText = addCourseToCourseList(writeText,courseNum,semester);
+		if("duplicate data".equals(updateText)) {
+			JOptionPane.showMessageDialog(new JTextField(), "<html><body>該學期已有課程使用此課程代碼，請重新填寫</body></html>", "新增課程失敗", JOptionPane.PLAIN_MESSAGE);
+			return false;
+		}
 		FileWriter writer = new FileWriter("data/課程資料.txt");
+		
 		writer.write(updateText);
 		writer.close();
+		JOptionPane.showMessageDialog(new JTextField(), "新增課程成功", "新增課程", JOptionPane.PLAIN_MESSAGE);
+		return true;
 	}
 
-	private String addCourseToCourseList(String writeText) throws IOException {
+	private String addCourseToCourseList(String writeText,String courseNum,String semester) throws IOException {
 		String file = "data/課程資料.txt";
 		FileReader fr = null;
 		fr = new FileReader(file);
@@ -288,6 +359,9 @@ public class Manager extends Account {
 		StringBuilder storeAfter = new StringBuilder();
 		while (br.ready()) {
 			String str = br.readLine();
+			String courseInfo[]  = str.split(" ");
+			if(courseInfo[1].equals(courseNum)&&courseInfo[0].equals(semester))
+				return "duplicate data";
 			if (writeText.compareTo(str) > 0)
 				storeBefore.append(str + '\n');
 			else if (writeText.compareTo(str) < 0)
@@ -298,20 +372,23 @@ public class Manager extends Account {
 	}
 
 	// 刪除課程
-	public void deleteCourse(JTable table, ArrayList<String[]> originalContext, String selectedSemester)
+	public boolean deleteCourse(Object[][] table, ArrayList<String[]> originalContext, String selectedSemester)
 			throws IOException {
 		String updateText = deleteCourseInCourseList(table, originalContext, selectedSemester);
 		FileWriter writer = new FileWriter("data/課程資料.txt");
 		writer.write(updateText.toString());
 		writer.close();
+		JOptionPane.showMessageDialog(new JTextField(), "刪除課程成功", "刪除課程", JOptionPane.ERROR_MESSAGE);
+		return true;
 	}
 
-	private String deleteCourseInCourseList(JTable table, ArrayList<String[]> orignalContext, String selectedSemester) {
+	private String deleteCourseInCourseList(Object[][] table, ArrayList<String[]> orignalContext,
+			String selectedSemester) {
 		String file = "data/課程資料.txt";
 		StringBuilder writeText = new StringBuilder();
 		ArrayList<Integer> removeRow = new ArrayList<Integer>();
-		for (int i = 0; i < table.getRowCount(); i++) {
-			if ((Boolean) table.getValueAt(i, 0) == true) {
+		for (int i = 0; i < table.length; i++) {
+			if ((Boolean) table[i][0] == true) {
 				removeRow.add(i);
 			}
 		}
@@ -339,7 +416,7 @@ public class Manager extends Account {
 		return writeText.toString();
 	}
 
-	public void modifyCourse(String beforeContext, ArrayList<String[]> thisSemesterContext, String afterContext)
+	public boolean modifyCourse(String beforeContext, ArrayList<String[]> thisSemesterContext, String afterContext)
 			throws IOException {
 		FileWriter writer = new FileWriter("data/課程資料.txt");
 		StringBuilder writeText = new StringBuilder();
@@ -353,16 +430,28 @@ public class Manager extends Account {
 		writeText.append(afterContext);
 		writer.write(writeText.toString());
 		writer.close();
+		JOptionPane.showMessageDialog(new JTextField(), "更改課程成功", "更改課程", JOptionPane.PLAIN_MESSAGE);
+		return true;
 	}
 
-	public void addNewStudent(String account, String selectedSemester, String selectedCourseNum) throws IOException {
-
+	public boolean addNewCourseStudent(String account, String selectedSemester, String selectedCourseNum) throws IOException {
 		String updateText = addStudentToCourse(account, selectedSemester, selectedCourseNum);
-		if (updateText != "") {
+		if (updateText == "empty name") {
+			JOptionPane.showMessageDialog(new JTextField(), "查無此學生，請重新填寫", "選修課程", JOptionPane.ERROR_MESSAGE);
+			return false;
+		} 
+		else if (updateText=="in the class") {
+			JOptionPane.showMessageDialog(new JTextField(), "此學生已選修課", "重複選修", JOptionPane.INFORMATION_MESSAGE);
+			return false;
+		}
+		else {
 			FileOutputStream writerStream = new FileOutputStream("data/課程資料.txt");
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(writerStream, "UTF-8"));
 			writer.write(updateText.toString());
 			writer.close();
+			JOptionPane.showMessageDialog(new JTextField(), "選修課程成功", "選修課程", JOptionPane.PLAIN_MESSAGE);
+			return true;
+
 		}
 
 	}
@@ -371,7 +460,7 @@ public class Manager extends Account {
 			throws IOException {
 		String name = findStudent(account);
 		if (name == "")
-			return "";
+			return "empty name";
 		FileReader fr = null;
 		fr = new FileReader("data/課程資料.txt");
 		BufferedReader br = new BufferedReader(fr);
@@ -385,10 +474,8 @@ public class Manager extends Account {
 				String studentAccount = info[7];
 				String[] checkArr = studentAccount.split(",");
 				List<String> checkList = (List<String>) Arrays.asList(checkArr);
-				if (checkList.indexOf(account) != -1) {
-					JOptionPane.showMessageDialog(new JTextField(), "此學生已選修課", "重複選修", JOptionPane.INFORMATION_MESSAGE);
-					return "";
-				}
+				if (checkList.indexOf(account) != -1)
+					return "in the class";
 				String studentScore = info[8];
 
 				StringBuilder nameText = new StringBuilder();
@@ -434,16 +521,17 @@ public class Manager extends Account {
 		return writeText.toString();
 	}
 
-	public void deleteCourseStudent(JTable table, String account, String selectedSemester) throws IOException {
+	public boolean deleteCourseStudent(Object[][] table, String account, String selectedSemester) throws IOException {
 		String updateText = deleteStudentInCourse(table, selectedSemester, account);
 		FileOutputStream writerStream = new FileOutputStream("data/課程資料.txt");
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(writerStream, "UTF-8"));
 		writer.write(updateText);
 		writer.close();
-
+		JOptionPane.showMessageDialog(new JTextField(), "刪除課程成功", "刪除課程", JOptionPane.PLAIN_MESSAGE);
+		return true;
 	}
 
-	private String deleteStudentInCourse(JTable table, String selectedSemester, String deletedAccount)
+	private String deleteStudentInCourse(Object[][] table, String selectedSemester, String deletedAccount)
 			throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader("data/課程資料.txt"));
 		StringBuilder writeText = new StringBuilder();
@@ -460,7 +548,7 @@ public class Manager extends Account {
 				for (int i = 1; i < 6; i++)
 					writeText.append(" " + courseInfoList[i]);
 				if (selectedSemester.equals(courseInfoList[0]) && stuIndex != -1) {
-					if ((Boolean) table.getValueAt(checkIndex, 0) == true) {
+					if ((Boolean) table[checkIndex][0] == true) {
 						if (stuIndex != 0) {
 							writeText.append(" " + nameInCourse[0]);
 							for (int i = 1; i < nameInCourse.length; i++) {
@@ -519,15 +607,19 @@ public class Manager extends Account {
 		return writeText.toString();
 	}
 
-	public void saveScore(JTable table, String selectedSemester, String selectedCourseNum) throws IOException {
+	public boolean saveScore(Object[][] table, String selectedSemester, String selectedCourseNum) throws IOException {
 		String updateText = updateStudentScoreInCourse(table, selectedSemester, selectedCourseNum);
+		if("invalid score".equals(updateText))
+			return false;
 		FileOutputStream writerStream = new FileOutputStream("data/課程資料.txt");
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(writerStream, "UTF-8"));
 		writer.write(updateText);
 		writer.close();
+		JOptionPane.showMessageDialog(new JTextField(), "儲存成績成功", "儲存成績", JOptionPane.PLAIN_MESSAGE);
+		return true;
 	}
 
-	private String updateStudentScoreInCourse(JTable table, String selectedSemester, String selectedCourseNum)
+	private String updateStudentScoreInCourse(Object[][] table, String selectedSemester, String selectedCourseNum)
 			throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader("data/課程資料.txt"));
 		StringBuilder updateText = new StringBuilder();
@@ -537,9 +629,20 @@ public class Manager extends Account {
 			for (int index = 0; index < courseInfo.length - 1; index++)
 				updateText.append(courseInfo[index] + " ");
 			if (selectedSemester.equals(courseInfo[0]) && selectedCourseNum.equals(courseInfo[1])) {
-				updateText.append((String) table.getValueAt(0, 2));
-				for (int i = 1; i < table.getRowCount(); i++)
-					updateText.append("," + (String) table.getValueAt(i, 2));
+				String scoreTemp = ((String) table[0][2]).replace(" ", "");
+				if("".equals(scoreTemp)) {
+					JOptionPane.showMessageDialog(new JTextField(), "輸入成績錯誤", "輸入錯誤", JOptionPane.INFORMATION_MESSAGE);
+					return "invalid score";
+				}	
+				updateText.append((String) table[0][2]);
+				for (int i = 1; i < table.length; i++) {
+					scoreTemp = ((String) table[i][2]).replace(" ", "");
+					if("".equals(scoreTemp)) {
+						JOptionPane.showMessageDialog(new JTextField(), "輸入成績錯誤", "輸入錯誤", JOptionPane.INFORMATION_MESSAGE);
+						return "invalid score";
+					}	
+					updateText.append("," + (String) table[i][2]);
+				}
 			} else
 				updateText.append(courseInfo[courseInfo.length - 1]);
 			updateText.append("\n");
@@ -547,9 +650,8 @@ public class Manager extends Account {
 		return updateText.toString();
 	}
 
-	public void printScore(String selectedSemester, String account) throws IOException {
+	public boolean printScore(String selectedSemester, String account) throws IOException {
 		String file = "";
-
 		JFileChooser fileChoice = new JFileChooser();
 		fileChoice.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		int approve = fileChoice.showSaveDialog(null);
@@ -562,7 +664,7 @@ public class Manager extends Account {
 			int result = JOptionPane.showConfirmDialog(new JTextField(), "檔案已存在，是否覆蓋?", "確認訊息",
 					JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 			if (result == JOptionPane.NO_OPTION) {
-				return;
+				return false;
 			}
 		}
 		Document document = new Document();
@@ -584,37 +686,37 @@ public class Manager extends Account {
 			try {
 				fr = new FileReader("data/課程資料.txt");
 			} catch (FileNotFoundException e1) {
-				return;
+				return false;
 			}
 			BufferedReader br = new BufferedReader(fr);
-			try {
-				ArrayList<ArrayList<String>> studentCourseInfo = new ArrayList<ArrayList<String>>();
-				for (int i = 0; i < 4; i++)
-					studentCourseInfo.add(new ArrayList());
-				while (br.ready()) {
-					String[] courseInfo = br.readLine().split(" ");
-					if (selectedSemester.equals(courseInfo[0])) {
-						List studentList = (List) Arrays.asList(courseInfo[7].split(","));
-						int studentIndex = studentList.indexOf(account);
-						String[] studentScore = courseInfo[8].split(",");
-						if (studentIndex != -1) {
-							scoreTable.addCell(new PdfPCell(new Paragraph(courseInfo[1])));
-							scoreTable.addCell(new PdfPCell(new Paragraph(courseInfo[2], chinessFont)));
-							scoreTable.addCell(new PdfPCell(new Paragraph(courseInfo[3])));
-							scoreTable.addCell(new PdfPCell(new Paragraph(courseInfo[5], chinessFont)));
-							scoreTable.addCell(new PdfPCell(new Paragraph(studentScore[studentIndex])));
-						}
+			ArrayList<ArrayList<String>> studentCourseInfo = new ArrayList<ArrayList<String>>();
+			for (int i = 0; i < 4; i++)
+				studentCourseInfo.add(new ArrayList());
+			while (br.ready()) {
+				String[] courseInfo = br.readLine().split(" ");
+				if (selectedSemester.equals(courseInfo[0])) {
+					List studentList = (List) Arrays.asList(courseInfo[7].split(","));
+					int studentIndex = studentList.indexOf(account);
+					String[] studentScore = courseInfo[8].split(",");
+					if (studentIndex != -1) {
+						scoreTable.addCell(new PdfPCell(new Paragraph(courseInfo[1])));
+						scoreTable.addCell(new PdfPCell(new Paragraph(courseInfo[2], chinessFont)));
+						scoreTable.addCell(new PdfPCell(new Paragraph(courseInfo[3])));
+						scoreTable.addCell(new PdfPCell(new Paragraph(courseInfo[5], chinessFont)));
+						scoreTable.addCell(new PdfPCell(new Paragraph(studentScore[studentIndex])));
 					}
 				}
-				document.add(scoreTable);
-				fr.close();
-				document.close();
-			} catch (IOException e3) {
 			}
+			document.add(scoreTable);
+			fr.close();
+			document.close();
+			JOptionPane.showMessageDialog(new JTextField(), "下載完成", "成績單下載", JOptionPane.PLAIN_MESSAGE);
+			return true;
 		} catch (FileNotFoundException | DocumentException e) {
+			return false;
 		} catch (IOException e) {
+			return false;
 		}
-
 	}
 
 	private String findStudent(String account) throws IOException {

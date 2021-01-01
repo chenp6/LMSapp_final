@@ -106,8 +106,10 @@ public class ManageCourseScorePanel extends JPanel {
 									@Override
 									public void actionPerformed(ActionEvent arg0) {
 										try {
-											if(LMSapp.userAccount instanceof Manager)
-												((Manager)LMSapp.userAccount).saveScore(tableInCourseScore,selectedSemester,selectedCourse[0]);
+											if(LMSapp.userAccount instanceof Manager) {
+												Object[][] tableData = getTableAsArray(tableInCourseScore);
+												((Manager)LMSapp.userAccount).saveScore(tableData,selectedSemester,selectedCourse[0]);
+											}
 										} catch (IOException e) {}
 									}
 									
@@ -151,4 +153,13 @@ public class ManageCourseScorePanel extends JPanel {
 			tableM.removeRow(0);
 	}
 	
+	public static Object[][] getTableAsArray(JTable table) {
+		int row = table.getRowCount();
+		int col = table.getColumnCount();
+		Object[][] tableData = new Object[row][col];
+		for(int i=0;i<row; i++)
+			for(int j=0;j<col;j++)
+				tableData[i][j] = table.getValueAt(i,j);
+		return tableData;
+	}
 }

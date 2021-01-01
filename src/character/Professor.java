@@ -41,20 +41,24 @@ public class Professor extends Account {
 				e.printStackTrace();
 			}
 		br.close();
-		FileOutputStream writerStream = new FileOutputStream("data/教師帳戶資料.txt");
+		FileOutputStream writerStream = new FileOutputStream("data/教授帳戶資料.txt");
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(writerStream, "UTF-8"));
 		writer.write(writeText);
 		writer.close();
 		return correctPw;
 	}
-	public void  saveScore(JTable table, String selectedSemester, String selectedCourseNum) throws IOException {
-		String updateText  = updateStudentScoreInCourse(table,selectedSemester,selectedCourseNum);
+	public boolean saveScore(Object[] tableInCourseScore, String selectedSemester, String selectedCourseNum) throws IOException {
+		String updateText  = updateStudentScoreInCourse(tableInCourseScore,selectedSemester,selectedCourseNum);
+		if("invalid score".equals(updateText))
+			return false;
 		FileOutputStream writerStream = new FileOutputStream("data/課程資料.txt");
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(writerStream, "UTF-8"));
 		writer.write(updateText);
 		writer.close();
+		JOptionPane.showMessageDialog(new JTextField(), "儲存成績成功", "儲存成績", JOptionPane.PLAIN_MESSAGE);
+		return true;
 	}
-	private String updateStudentScoreInCourse(JTable table,String selectedSemester,String selectedCourseNum) throws IOException {
+	private String updateStudentScoreInCourse(Object[] score,String selectedSemester,String selectedCourseNum) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader("data/課程資料.txt"));
 		StringBuilder updateText = new StringBuilder();
 		while(br.ready()) {
@@ -62,10 +66,22 @@ public class Professor extends Account {
 			String[] courseInfo = courseInfoLine.split(" ");
 			for(int index = 0;index<courseInfo.length-1;index++)
 				updateText.append(courseInfo[index]+" ");
+			int studentNum = (courseInfo[courseInfo.length-1].split(",")).length;
 			if(selectedSemester.equals(courseInfo[0]) && selectedCourseNum.equals(courseInfo[1])) {
-				updateText.append((String)table.getValueAt(0, 2));
-				for(int i=1;i<table.getRowCount();i++)
-					updateText.append(","+(String)table.getValueAt(i, 2));
+				String scoreTemp = ((String) score[0]).replace(" ", "");
+				if("".equals(scoreTemp)) {
+					JOptionPane.showMessageDialog(new JTextField(), "輸入成績錯誤", "輸入錯誤", JOptionPane.INFORMATION_MESSAGE);
+					return "invalid score";
+				}	
+				updateText.append(score[0]);
+				for(int i=1;i<studentNum;i++) {
+					scoreTemp = ((String) score[i]).replace(" ", "");
+					if("".equals(scoreTemp)) {
+						JOptionPane.showMessageDialog(new JTextField(), "輸入成績錯誤", "輸入錯誤", JOptionPane.INFORMATION_MESSAGE);
+						return "invalid score";
+					}	
+					updateText.append(","+score[i]);
+				}
 			}
 			else
 				updateText.append(courseInfo[courseInfo.length-1]);

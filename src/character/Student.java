@@ -67,7 +67,7 @@ public class Student extends Account {
 	}
 	
 	
-	public void printScore() {
+	public boolean printScore() {
 		String path = "";
 		JFileChooser fileChoice = new JFileChooser();
 		fileChoice.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
@@ -79,7 +79,7 @@ public class Student extends Account {
 			int result = JOptionPane.showConfirmDialog(new JTextField(), "檔案已存在，是否覆蓋?", "確認訊息",
 					JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 			if (result == JOptionPane.NO_OPTION) {
-				return ;
+				return false;
 			}
 		}
 		Document document = new Document();
@@ -90,7 +90,7 @@ public class Student extends Account {
 			PdfWriter.getInstance(document,
 					new FileOutputStream(path));
 			document.open();
-			document.add(new Paragraph( LMSapp.userAccount.account +  LMSapp.userAccount.name + "的成績單\n\n", chinessFont));
+			document.add(new Paragraph( LMSapp.userAccount.account +  LMSapp.userAccount.name + "的總成績單\n\n", chinessFont));
 			PdfPTable scoreTable = new PdfPTable(6);
 			scoreTable.setWidths(new float[] { 10f, 15f, 50f, 10f, 13f, 10f });
 			scoreTable.addCell(new PdfPCell(new Paragraph("學期", chinessFont)));
@@ -103,10 +103,9 @@ public class Student extends Account {
 			try {
 				fr = new FileReader("data/課程資料.txt");
 			} catch (FileNotFoundException e1) {
-				return;
+				return false;
 			}
 			BufferedReader br = new BufferedReader(fr);
-			try {
 				ArrayList<ArrayList<String>> studentCourseInfo = new ArrayList<ArrayList<String>>();
 				for (int i = 0; i < 4; i++)
 					studentCourseInfo.add(new ArrayList());
@@ -127,11 +126,12 @@ public class Student extends Account {
 				fr.close();
 				document.add(scoreTable);
 				document.close();
-			} catch (IOException e3) {
-			}
-
+				JOptionPane.showMessageDialog(new JTextField(), "下載完成", "下載總成績單", JOptionPane.PLAIN_MESSAGE);
+				return true;
 		} catch (FileNotFoundException | DocumentException e) {
+			return false;
 		} catch (IOException e) {
+			return false;
 		}
 	}
 	

@@ -76,7 +76,7 @@ public class ProfessorCourseScorePanel extends JPanel {
 
                     BufferedReader br = new BufferedReader(new FileReader("data/課程資料.txt"));
                     while(br.ready()) {
-                        JTable tableInCourseScore =  new JTable(tableMInCourseScore) {
+                        JTable table =  new JTable(tableMInCourseScore) {
                             public boolean isCellEditable(int row, int column) {
                                 if (column == 2)
                                     return true;
@@ -84,7 +84,7 @@ public class ProfessorCourseScorePanel extends JPanel {
                                     return false;
                             }// 表格不允許被編輯
                         };
-                        //if(courseInfoInCourseScore[4].equals(LMSapp.userAccount.name))
+                        
                         String[] courseInfoInCourseScore = br.readLine().split(" ");
                         if(selectedSemester.equals(courseInfoInCourseScore[0]) && selectedCourse[0].equals(courseInfoInCourseScore[1])) {
                             Object[] studentAccount = courseInfoInCourseScore[7].split(",");
@@ -92,7 +92,7 @@ public class ProfessorCourseScorePanel extends JPanel {
                             Object[] studentScore = courseInfoInCourseScore[8].split(",");
                             for(int i=0;i<studentAccount.length;i++)
                                 tableMInCourseScore.addRow(new Object[] {studentAccount[i],studentName[i],studentScore[i]});
-                            JScrollPane accountPaneInCourseScore = new JScrollPane(tableInCourseScore);
+                            JScrollPane accountPaneInCourseScore = new JScrollPane(table);
                             accountPaneInCourseScore.setBounds(25, 250, 850, 300);
                             getThisPanel().add(accountPaneInCourseScore);
                             JButton saveChangeBtnInCourseScore = new JButton("儲存變更");
@@ -103,8 +103,12 @@ public class ProfessorCourseScorePanel extends JPanel {
                                 @Override
                                 public void actionPerformed(ActionEvent arg0) {
                                     try {
-                                        if(LMSapp.userAccount instanceof Professor)
-                                            ((Professor)LMSapp.userAccount).saveScore(tableInCourseScore,selectedSemester,selectedCourse[0]);
+                                        if(LMSapp.userAccount instanceof Professor) {
+                                        	Object[] scoreData = new String[table.getRowCount()];
+                                            for(int i=0;i<table.getRowCount();i++)
+                                            	scoreData[i] = table.getValueAt(i, 2);
+                                        	((Professor)LMSapp.userAccount).saveScore(scoreData,selectedSemester,selectedCourse[0]);                                          
+                                        }
                                     } catch (IOException ignored) {}
                                 }
 
@@ -147,5 +151,7 @@ public class ProfessorCourseScorePanel extends JPanel {
         while (tableM.getRowCount() > 0)
             tableM.removeRow(0);
     }
+    
+    
 
 }

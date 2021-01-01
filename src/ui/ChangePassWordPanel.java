@@ -60,12 +60,11 @@ public class ChangePassWordPanel extends JPanel {
 						correctPw = LMSapp.userAccount.changePassword(new String(oldPassword.getPassword()),
 								new String(checkedPassword.getPassword()));
 						LMSapp.userAccount.password = newPw;
+						
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
-					oldPassword.setText("");
-					newPassword.setText("");
-					checkedPassword.setText("");
+
 					if (correctPw)
 						JOptionPane.showMessageDialog(new JFrame(), "密碼變更成功", "變更密碼", JOptionPane.INFORMATION_MESSAGE);
 					else {
