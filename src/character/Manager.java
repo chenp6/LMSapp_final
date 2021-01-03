@@ -96,7 +96,9 @@ public class Manager extends Account {
 		}
 		writeText.append("\n");
 		String file = "data/" + selectedCharacter + "帳戶資料.txt";
-		String updateString = addAccountToAccountList(selectedCharacter, writeText.toString(), file);
+		String updateString = addAccountToAccountList(account ,selectedCharacter, writeText.toString(), file);
+		if("duplicate data".equals(updateString))
+			return false;
 		FileWriter writer = new FileWriter(file);
 		writer.write(updateString);
 		writer.close();
@@ -104,7 +106,7 @@ public class Manager extends Account {
 		return true;
 	}
 
-	private String addAccountToAccountList(String selectedCharacter, String writeText, String file) throws IOException {
+	private String addAccountToAccountList(String account ,String selectedCharacter, String writeText, String file) throws IOException {
 		FileReader fr = null;
 		fr = new FileReader(file);
 		BufferedReader br = new BufferedReader(fr);
@@ -112,10 +114,16 @@ public class Manager extends Account {
 		StringBuilder storeAfter = new StringBuilder();
 		while (br.ready()) {
 			String str = br.readLine();
+			String[] info = str.split(" "); 
+			if(account.equals(info[0])) {
+				br.close();
+				return "duplicate data";
+			}				
 			if (writeText.compareTo(str) > 0)
 				storeBefore.append(str + '\n');
 			else if (writeText.compareTo(str) < 0)
 				storeAfter.append(str + '\n');
+			
 		}
 		br.close();
 		return storeBefore.toString() + writeText + storeAfter.toString();
@@ -194,6 +202,7 @@ public class Manager extends Account {
 			}
 			strBuild.append(accountList + "\n");
 		}
+		br.close();
 		return strBuild.toString();
 	}
 
@@ -255,6 +264,7 @@ public class Manager extends Account {
 			}
 			strBuild.append(accountList + "\n");
 		}
+		br.close();
 		return strBuild.toString();
 	}
 
@@ -308,6 +318,7 @@ public class Manager extends Account {
 			}
 			strBuild.append(accountList + "\n");
 		}
+		br.close();
 		return strBuild.toString();
 	}
 	// ===================課程管理===================
@@ -343,7 +354,6 @@ public class Manager extends Account {
 			return false;
 		}
 		FileWriter writer = new FileWriter("data/課程資料.txt");
-		
 		writer.write(updateText);
 		writer.close();
 		JOptionPane.showMessageDialog(new JTextField(), "新增課程成功", "新增課程", JOptionPane.PLAIN_MESSAGE);
@@ -360,8 +370,10 @@ public class Manager extends Account {
 		while (br.ready()) {
 			String str = br.readLine();
 			String courseInfo[]  = str.split(" ");
-			if(courseInfo[1].equals(courseNum)&&courseInfo[0].equals(semester))
+			if(courseInfo[1].equals(courseNum)&&courseInfo[0].equals(semester)) {
+				br.close();
 				return "duplicate data";
+			}
 			if (writeText.compareTo(str) > 0)
 				storeBefore.append(str + '\n');
 			else if (writeText.compareTo(str) < 0)
@@ -378,7 +390,7 @@ public class Manager extends Account {
 		FileWriter writer = new FileWriter("data/課程資料.txt");
 		writer.write(updateText.toString());
 		writer.close();
-		JOptionPane.showMessageDialog(new JTextField(), "刪除課程成功", "刪除課程", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(new JTextField(), "刪除課程成功", "刪除課程", JOptionPane.PLAIN_MESSAGE);
 		return true;
 	}
 
@@ -510,7 +522,11 @@ public class Manager extends Account {
 						accountText.append("," + accountArr[i]);
 						scoreText.append("," + scoreArr[i]);
 					}
-
+					if(added==false) {
+						nameText.append("," + name);
+						accountText.append("," + account);
+						scoreText.append(",-");
+					}
 				}
 				writeText.append(info[0] + " " + info[1] + " " + info[2] + " " + info[3] + " " + info[4] + " " + info[5]
 						+ " " + nameText.toString() + " " + accountText.toString() + " " + scoreText.toString() + "\n");
@@ -527,7 +543,7 @@ public class Manager extends Account {
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(writerStream, "UTF-8"));
 		writer.write(updateText);
 		writer.close();
-		JOptionPane.showMessageDialog(new JTextField(), "刪除課程成功", "刪除課程", JOptionPane.PLAIN_MESSAGE);
+		JOptionPane.showMessageDialog(new JTextField(), "刪除選修課程成功", "刪除課程", JOptionPane.PLAIN_MESSAGE);
 		return true;
 	}
 

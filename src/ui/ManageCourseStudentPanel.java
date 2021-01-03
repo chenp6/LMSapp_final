@@ -158,7 +158,6 @@ public class ManageCourseStudentPanel extends JPanel {
 								temp[0] = false;
 								tableMInDeleteStudent.addRow(temp);
 							}
-
 						}
 						brInDeleteStudent.close();
 						JButton deleteSureBtn = new JButton("確定更改");

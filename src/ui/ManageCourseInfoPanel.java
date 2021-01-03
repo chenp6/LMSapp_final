@@ -140,7 +140,7 @@ public class ManageCourseInfoPanel extends JPanel {
 					deleteSureBtn.setBounds(400, 340, 111, 40);
 					deleteSureBtn.setVisible(false);
 					DefaultTableModel tableMInDeleteCourse;
-					tableMInDeleteCourse = new DefaultTableModel(null, new String[] { "刪除", "課程代碼", "課程名稱", "學分","授課教師" });
+					tableMInDeleteCourse = new DefaultTableModel(null, new String[] { "刪除", "課程代碼", "課程名稱", "學分","授課教授" });
 					JTable listTableInDeleteCourse = new JTable(tableMInDeleteCourse) {
 						public boolean isCellEditable(int row, int column) {
 							if (column == 0)
@@ -208,6 +208,7 @@ public class ManageCourseInfoPanel extends JPanel {
 
 								if(LMSapp.userAccount instanceof Manager) {
 									Object[][] tableData = getTableAsArray(listTableInDeleteCourse);
+									System.out.println(originalInDeleteCourse.size());
 									((Manager)LMSapp.userAccount).deleteCourse(tableData,originalInDeleteCourse,selectedSemester);
 								}
 								for (int i = 0; i < listTableInDeleteCourse.getRowCount(); i++) {

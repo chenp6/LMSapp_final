@@ -11,7 +11,7 @@ public abstract class Account {
 	public String account;
 	public String name;
 	public String password;
-	public char character;// 學生:'s' 教師:'p' 管理員:'m'
+	public char character;// 學生:'s' 教授:'p' 管理員:'m'
 
 	public Account(String account, String password, String name,char character) {
 		this.account = account;
